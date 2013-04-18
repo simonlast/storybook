@@ -1,0 +1,131 @@
+.noselect {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+}
+body {
+  background-color: #fafafa;
+  font-family: 'Helvetica Light', 'Helvetica';
+  font-weight: lighter;
+  overflow: hidden;
+  color: #646464;
+  margin: 0;
+}
+#pcanvas {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  /* mobile webkit */
+
+  position: absolute;
+  top: 0;
+  left: 0px;
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
+}
+.info {
+  position: absolute;
+  top: 8px;
+  right: 15px;
+  opacity: .6;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+}
+.info:hover {
+  opacity: .8;
+}
+i {
+  color: #141414;
+  font-size: 70px;
+}
+a {
+  text-decoration: none;
+}
+.helpToggle {
+  position: absolute;
+  top: 0px;
+  right: 0;
+  background-color: #e1e1e1;
+  color: #646464;
+  padding: 10px;
+  margin: 5px;
+  width: 60px;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  border: none;
+}
+.helpToggle i {
+  font-size: 50px;
+}
+.toggle {
+  opacity: .8;
+  -webkit-transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  -ms-transition: all 0.15s ease-in-out;
+}
+.toggle i {
+  color: #282828;
+}
+.toggle:hover {
+  opacity: 1;
+}
+.menuToggle {
+  position: absolute;
+  top: 0px;
+  right: 70px;
+  background-color: #e1e1e1;
+  color: #646464;
+  padding: 10px;
+  margin: 5px;
+  width: 60px;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  border: none;
+}
+.menuToggle i {
+  font-size: 50px;
+}
+.help {
+  position: absolute;
+  top: 80px;
+  right: -500px;
+  background-color: #e1e1e1;
+  color: #646464;
+  opacity: .7;
+  width: 400px;
+  padding: 20px;
+  margin: 5px;
+  font-size: 30px;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+}
+.help a {
+  text-decoration: underline;
+  color: #646464;
+}
+#info {
+  background-color: #d4d4d4;
+  padding: 10px;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+}

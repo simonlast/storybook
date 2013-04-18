@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Storeographer</title>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <link rel="shortcut icon" href="http://www.gravatar.com/avatar/3b964d84fcfbcdf59089c8bd7309f0b7.ico" />
+    <link rel="stylesheet" href="font-awesome.css">
+  </head>
+  <body>
+    <canvas id="pcanvas"></canvas>
+
+    <button onmousedown="toggleLoop()" class="toggle helpToggle">
+      <i class="icon-play"></i>
+    </button>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+    <script type="text/javascript" src="hammer.min.js"></script>
+    <script type="text/javascript" src="processing.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+
+    <script type="text/javascript">
+
+      var tg = true;
+
+      var toggleLoop = function(){
+        tg = !tg;
+        if(tg)
+          pjs.loop();
+        else
+          pjs.noLoop();
+      };
+
+      Hammer(canvas).on("touch", pjs.touch);
+      Hammer(canvas).on("release", pjs.release);
+      Hammer(canvas).on("drag", pjs.drag);
+
+    </script>
+  </body>
+</html>

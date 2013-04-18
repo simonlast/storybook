@@ -1,0 +1,16 @@
+{
+  "name": "storyx",
+  "subdomain": "storyx",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": "0.10.4"
+  },
+  "dependencies": {
+    "connect": "2.6.x",
+    "express": "3.0.x",
+    "socket.io": "0.9.x"
+  }
+}

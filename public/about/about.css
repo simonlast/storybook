@@ -1,0 +1,73 @@
+.noselect {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+}
+body {
+  background-color: #fafafa;
+  font-family: 'Helvetica', sans-serif;
+  color: #3c3c3c;
+}
+.content {
+  width: 100%;
+  margin: 0px;
+  font-weight: lighter;
+}
+.about {
+  padding: 80px;
+  font-size: 40px;
+  text-align: left;
+  margin: 0 auto;
+}
+.header {
+  font-size: 80px;
+}
+.highlight {
+  text-decoration: none;
+  background-color: #3c3c3c;
+  color: #fafafa;
+  opacity: .8;
+  -webkit-backface-visibility: hidden;
+  /* Prevents flickering */
+
+  -webkit-transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  -ms-transition: all 0.15s ease-in-out;
+}
+.highlight:hover {
+  opacity: 1;
+}
+.link {
+  font-size: 60px;
+  line-height: 150%;
+}
+.button {
+  color: #3c3c3c;
+  text-decoration: none;
+  font-family: monospace;
+  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0px;
+  text-align: center;
+  display: inline;
+  opacity: .8;
+  -webkit-backface-visibility: hidden;
+  /* Prevents flickering */
+
+  -webkit-transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  -ms-transition: all 0.15s ease-in-out;
+}
+.menubutton {
+  padding-right: 20px;
+}
+.button i {
+  color: #505050;
+  font-size: 70px;
+}
+.button:hover {
+  opacity: 1;
+}
