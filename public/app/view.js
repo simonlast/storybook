@@ -10,14 +10,37 @@ var play = function(pjs) {
 	var taps = [];
 	var mouse;
 
+	pjs.viewMode = false;
+
 	var currButton = null;
 	var connectButton = null;
 
 	var buttonRad = 50;
 	var spritePadding = buttonRad + 15;
 
+	var buttonClasses;
+
+	//toolbox
+	var toolboxDimen, toolboxCenter;
+	var toolboxButtons;
+
 	pjs.setupScreen = function(){
 		pjs.size(pjs.screenWidth, pjs.screenHeight);
+		toolboxDimen = new pjs.PVector(pjs.width - 50, buttonRad*2.7 + 10);
+		toolboxCenter = new pjs.PVector(pjs.width/2, pjs.height - toolboxDimen.y/2 + 10);
+
+		toolboxButtons = [];
+		buttonClasses = [Anchor, Move, Timer, Touch];
+
+		var toolboxStartX = toolboxCenter.x - toolboxDimen.x/2;
+		var divX = toolboxDimen.x/buttonClasses.length;
+
+		for(var i=0; i<buttonClasses.length; i++){
+			var newButton = new buttonClasses[i](toolboxStartX + divX*i + divX/2,
+				pjs.height - toolboxDimen.y/2+5, 50, buttonRad);
+			toolboxButtons.push(newButton);
+		}
+
 	};
 
 	pjs.setup = function(){
@@ -28,49 +51,57 @@ var play = function(pjs) {
 		pjs.smooth();
 		pjs.textAlign(pjs.CENTER);
 		pjs.rectMode(pjs.CENTER);
+		pjs.imageMode(pjs.CENTER);
 		pjs.textSize(30);
 
 		mouse = new pjs.PVector();
 
-		/*for(var i=0; i<7; i++){
-			buttons.push(new Button(pjs.random(0, pjs.width), pjs.random(0, pjs.height), 50));
-		}*/
-
-		//buttons.push(new Button(pjs.random(0, pjs.width), pjs.random(0, pjs.height), buttonRad));
-
-		sprites.push(new Sprite("billy", pjs.width/2, pjs.height/2, 150, 250));
-
-		for(var i=0; i<2; i++){
-			buttons.push(new Move(pjs.random(0, pjs.width), pjs.random(0, pjs.height), buttonRad, sprites[0]));
-			buttons.push(new Timer(pjs.random(0, pjs.width), pjs.random(0, pjs.height), buttonRad));
-			buttons.push(new Touch(pjs.random(0, pjs.width), pjs.random(0, pjs.height), buttonRad));
-			//buttons.push(new Tilt(pjs.random(0, pjs.width), pjs.random(0, pjs.height), buttonRad));
-		}
+		//sprites.push(new Sprite("billy", pjs.width/2, pjs.height/2, 150, 250));
 
 	};
 
 	pjs.draw = function(){
 		pjs.background(bkg);
 
-		mouse.x = pjs.mouseX;
-		mouse.y = pjs.mouseY;
-
 		for(var i=0; i<sprites.length; i++){
 			sprites[i].render();
 		}
 
-		for(var i=0; i<buttons.length; i++){
-			buttons[i].drawLinks();
+		if(!pjs.viewMode){
+			for(var i=0; i<buttons.length; i++){
+				buttons[i].drawLinks();
+			}
+
+			for(var i=0; i<buttons.length; i++){
+				buttons[i].render();
+			}
+
+			drawToolbox();	
 		}
 
-		for(var i=0; i<buttons.length; i++){
-			buttons[i].render();
-		}
 	};
 
-	pjs.touch = function(){
+	//this is a Hammer.js touch event
+	pjs.touch = function(event){
+		event.gesture.preventDefault();
+		var touch = event.gesture.touches[0];
+		mouse.x = touch.pageX;
+		mouse.y = touch.pageY;
+
+		if(mouse.y >= toolboxCenter.y - toolboxDimen.y/2 &&
+			mouse.x >= toolboxCenter.x - toolboxDimen.x/2 &&
+			mouse.x <= toolboxCenter.x + toolboxDimen.x/2){
+			activateToolbox();
+			return;
+		}
+
+		if(pjs.viewMode){
+			fireTaps();
+			return;
+		}
+		
 		var nearest = findNearestVec(buttons, mouse);
-		if(nearest.dist <= nearest.el.connectCircleDist + nearest.el.connectCircleRad){
+		if(nearest && nearest.dist <= nearest.el.connectCircleDist + nearest.el.connectCircleRad){
 			currButton = nearest.el;
 			clearAllTimeouts();
 			
@@ -86,39 +117,71 @@ var play = function(pjs) {
 			fireTaps();
 		}
 		
-		
-
 	};
 
-	pjs.drag = function(){
+	pjs.drag = function(event){
+		event.gesture.preventDefault();
+		var touch = event.gesture.touches[0];
+		mouse.x = touch.pageX;
+		mouse.y = touch.pageY;
+		
 		if(currButton){
 			if(connectButton){
-
+				//...
 			}else{
 				currButton.move(mouse.x, mouse.y);
 			}
 		}
 	};
 
-	pjs.release = function(){
+	pjs.release = function(event){
+		event.gesture.preventDefault();
+		var touch = event.gesture.touches[0];
+		mouse.x = touch.pageX;
+		mouse.y = touch.pageY;
+		
 		if(currButton){
 			if(connectButton){
 				var nearest = findNearestVec(buttons, mouse);
 				if(nearest.dist <= nearest.el.rad)
 					currButton.connect(nearest.el);
 					connectButton = null;
+			}else{
+				if(currButton.pos.y - currButton.rad >= toolboxCenter.y - toolboxDimen.y/2){
+					console.log("YES");
+					currButton.removeFromCanvas();
+					currButton = null;
+				}
 			}
-			//currButton = null;
-			//connectButton = null;
+			
 			evalAll();
 		}
 	};
 
+	var drawToolbox = function(){
+		pjs.fill(200,100);
+		pjs.rect(toolboxCenter.x, toolboxCenter.y, toolboxDimen.x, toolboxDimen.y, 10);
+
+		for(var i=0; i<toolboxButtons.length; i++){
+			toolboxButtons[i].render();
+		}
+	};
+
+	var activateToolbox = function(){
+		var nearest = findNearestVec(toolboxButtons, mouse);
+		if(nearest.dist <= nearest.el.connectCircleDist + nearest.el.connectCircleRad){
+			var newButton = nearest.el.deepClone();
+			newButton.addToCanvas();
+			currButton = newButton;
+		}
+	};
+
 	var evalAll = function(){
+		clearAllTimeouts();
 		for(var i=0; i<anchors.length; i++){
 			anchors[i].eval();
 		}
-	}
+	};
 
 	var clearAllTimeouts = function(){
 		for(var i=0; i<timers.length; i++){
@@ -126,6 +189,18 @@ var play = function(pjs) {
 		}
 		timers = [];
 		taps = [];
+	};
+
+	pjs.toggleViewMode = function(){
+		pjs.viewMode = !pjs.viewMode;
+		if(pjs.viewMode){
+			evalAll();
+			currButton = null;
+			connectButton = null;
+			$help.innerHTML = '<i class="icon-stop"></i>';
+		}else{
+			$help.innerHTML = '<i class="icon-play"></i>';	
+		}
 	};
 
 	var fireTaps = function(){
@@ -144,7 +219,7 @@ var play = function(pjs) {
 		})
 
 		console.log(taps.length);
-	}
+	};
 
 	/*
 	* arr: an array of objects with a pos vector
@@ -176,13 +251,15 @@ var play = function(pjs) {
 
 	var Sprite = Class.create({
 
-		initialize: function(name, x, y, w, h){
+		initialize: function(name, x, y, w, h, anchor){
 			this.pos = new pjs.PVector(x, y);
-			this.dimen = new pjs.PVector(w,h);
+			this.dimen = new pjs.PVector(300, 300); //600/2 by default for now
 			this.name = name;
-			this.anchor = new Anchor(x, y + h/2 + spritePadding, buttonRad, this);
-			buttons.push(this.anchor);
-			anchors.push(this.anchor);
+			this.image = null;
+			//this.anchor = new Anchor(x, y + this.dimen.y/2 + spritePadding, buttonRad, this);
+			//buttons.push(this.anchor);
+			//anchors.push(this.anchor);
+			this.anchor = anchor
 
 			this.tweens = {
 				pos: new pjs.PVector(x, y),
@@ -198,37 +275,55 @@ var play = function(pjs) {
 		},
 
 		collides: function(vec){
-			if(vec.x >= this.pos.x - this.dimen.x/2
-				&& vec.x <= this.pos.x + this.dimen.x/2
-				&& vec.y >= this.pos.y - this.dimen.y/2
-				&& vec.y <= this.pos.y + this.dimen.y/2){
+			if(vec.x >= this.tweens.pos.x - this.tweens.dimen.x/2
+				&& vec.x <= this.tweens.pos.x + this.tweens.dimen.x/2
+				&& vec.y >= this.tweens.pos.y - this.tweens.dimen.y/2
+				&& vec.y <= this.tweens.pos.y + this.tweens.dimen.y/2){
 				return true;
 			}
 			return false;
 		},
 
+		createImage: function(){
+			var obj = this;
+			SketchTool.create({width: 600, height: 600, onComplete: function(sketch){
+				console.log(sketch.getPNG());
+				console.log(this);
+				obj.image = pjs.loadImage(sketch.getPNG());
+				console.log(obj.image);
+				pjs.loop();
+			}});
+			pjs.noLoop();
+		},
+
 		render: function(){
 			this.tween();
-			pjs.fill(100,60);
-			pjs.rect(this.tweens.pos.x,this.tweens.pos.y,this.tweens.dimen.x+10,this.tweens.dimen.y+10, 10);
-			pjs.fill(236,208,120);
-			pjs.rect(this.tweens.pos.x,this.tweens.pos.y,this.tweens.dimen.x,this.tweens.dimen.y, 10);
 			
+			if(this.image){
+				if(!pjs.viewMode){
+					pjs.fill(100,10);
+					pjs.rect(this.tweens.pos.x,this.tweens.pos.y,
+						this.tweens.dimen.x+10,this.tweens.dimen.y+10, 10);
+				}
+				pjs.image(this.image, this.tweens.pos.x, this.tweens.pos.y, 
+				this.tweens.dimen.x, this.tweens.dimen.y);
+			}else{
+				pjs.fill(100,20);
+				pjs.rect(this.tweens.pos.x,this.tweens.pos.y,this.tweens.dimen.x+10,this.tweens.dimen.y+10, 10);
+			}
 		}
 	});
 
 	var Button = Class.create({
 		initialize: function(x, y, rad, color){
 			this.pos = new pjs.PVector(x, y);
-			//this.v = new pjs.PVector();
-			//this.a = new pjs.PVector();
 			this.rad = rad;
 			this.outline = rad + 5;
 			this.color = color;
 
 			this.connectCircleDist = this.rad + 5;
 			this.connectCircle = new pjs.PVector(0, this.connectCircleDist);
-			this.connectCircleRad = this.rad/2;
+			this.connectCircleRad = this.rad*2/3;
 
 			this.connected = []; //connected in circuit
 			this.connectsToThis = []; //connected to this
@@ -237,6 +332,26 @@ var play = function(pjs) {
 			this.tweens = {
 				outline: this.outline
 			};
+		},
+
+		deepClone: function(){
+			var clone = new Button(this.pos.x, this.pos.y, this.rad, this.color);
+			return clone;
+		},
+
+		addToCanvas: function(){
+			buttons.push(this);
+		},
+
+
+		removeFromCanvas: function(){
+			var obj = this;
+			buttons = buttons.filter(function(el){
+				return el != obj;
+			});
+
+			this.disconnectAll();
+
 		},
 
 		tween: function(){
@@ -321,7 +436,7 @@ var play = function(pjs) {
 			return null;
 		},
 
-		//draws a 'nub' at endpoints of connections so they can be edited
+		//draws a 'nib' at endpoints of connections so they can be edited
 		drawConnectionTips: function(){
 			pjs.fill(this.color, 200);
 			for(var i=0; i<this.connected.length; i++){
@@ -395,10 +510,19 @@ var play = function(pjs) {
 			}
 		},
 
+		disconnectAll: function(){
+			for(var i=0; i<this.connected.length; i++){
+				this.disconnect(this.connected[i]);
+			}
+
+			for(var i=0; i<this.connectsToThis.length; i++){
+				this.connectsToThis[i].disconnect(this);
+			}
+		},
+
 		disconnect: function(other){
 			console.log(this.connected);
 			this.connected = this.connected.filter(function(el){
-				console.log(el != other);
 				return el != other;
 			});
 			console.log(this.connected);
@@ -411,14 +535,36 @@ var play = function(pjs) {
 
 	var Anchor = Class.create(Button, {
 		initialize: function($super, x, y, rad, sprite){
-			this.sprite = sprite;
-			$super(x, y, rad, pjs.color(200));
+			this.sprite = new Sprite(x, y + this.rad/2 + spritePadding, buttonRad, this);
+			$super(x, y, rad, pjs.color(168,202,186));
+		},
+
+		addToCanvas: function($super){
+			$super();
+			sprites.push(this.sprite);
+			anchors.push(this);
+		},
+
+		removeFromCanvas: function($super){
+			$super();
+			var obj = this;
+			anchors = anchors.filter(function(el){
+				return el != obj;
+			});
+			sprites = sprites.filter(function(el){
+				return el != obj.sprite;
+			});
 		},
 
 		render: function($super){
 			$super();
 			pjs.fill(70);
-			pjs.text("o", this.pos.x, this.pos.y+this.rad/7);
+			pjs.text("+", this.pos.x, this.pos.y+this.rad/4);
+		},
+
+		deepClone: function(){
+			var clone = new Anchor(this.pos.x, this.pos.y, this.rad, this.sprite);
+			return clone;
 		},
 
 		move: function($super, x, y){
@@ -429,32 +575,70 @@ var play = function(pjs) {
 
 		eval: function(sprite){
 			console.log("EVAL Anchor @" + this.pos.x);
-			this.showReaction();
-			this.move(this.pos.x, this.pos.y);
-			for(var i=0; i<this.connected.length; i++){
-				this.connected[i].eval(this.sprite);
+			if(!this.sprite.image){
+				this.sprite.createImage();
+			}else{
+				this.showReaction();
+				this.move(this.pos.x, this.pos.y);
+				for(var i=0; i<this.connected.length; i++){
+					this.connected[i].eval(this.sprite);
+				}	
 			}
+			
 		}
 
 	});
 
 	var Move = Class.create(Button, {
 		initialize: function($super, x, y, rad){
-			$super(x, y, rad, pjs.color(200));
+			$super(x, y, rad, pjs.color(168,202,186));
+			
+			//used for animation
+			this.spriteOrig = null;
+			this.sprite = null;
+			this.distToSprite = null;
 		},
 
 		render: function($super){
 			$super();
 			pjs.fill(70);
 			pjs.text(": :", this.pos.x, this.pos.y+this.rad/7);
+			if(this.sprite){
+				var dist = pjs.PVector.sub(this.sprite.tweens.pos, this.spriteOrig).mag();
+				//console.log(dist);
+				var diff = this.distToSprite - dist
+				console.log(diff);
+
+				var len = this.rad*2 - 20;
+				var circleDiff = len - (diff / this.distToSprite) * len + 5;
+				var x = this.pos.x - this.rad + circleDiff;
+
+				if(diff < 20){
+					this.spriteOrig = null;
+					this.sprite = null;
+					this.distToSprite = null;
+				}else{
+					//pjs.fill(200,240);
+					//pjs.ellipse(x, this.pos.y, 40,40);
+				}
+			}
+		},
+
+		deepClone: function(){
+			var clone = new Move(this.pos.x, this.pos.y, this.rad, this.color);
+			return clone;
 		},
 
 		eval: function(sprite){
-			console.log("EVAL Anchor @" + this.pos.x);
+			console.log("EVAL Move @" + this.pos.x);
 			this.showReaction();
 			if(sprite){
+				//original pos of sprite
+				this.spriteOrig = new pjs.PVector(sprite.tweens.pos.x, sprite.tweens.pos.y);
 				sprite.pos.x = this.pos.x;
 				sprite.pos.y = this.pos.y - sprite.dimen.y/2 - spritePadding;
+				this.sprite = sprite;
+				this.distToSprite = pjs.PVector.sub(sprite.pos, this.spriteOrig).mag();
 			}
 			for(var i=0; i<this.connected.length; i++){
 				this.connected[i].eval(sprite);
@@ -466,17 +650,33 @@ var play = function(pjs) {
 	var Timer = Class.create(Button, {
 		initialize: function($super, x, y, rad){
 			this.timeout = 1000;
-			$super(x, y, rad, pjs.color(121,189,154));
+			this.lastTimeout = 0;
+			this.timeoutLeft = 0;
+			$super(x, y, rad, pjs.color(236,208,120));
 		},
 
 		render: function($super){
 			$super();
 			pjs.fill(70);
 			pjs.text("...", this.pos.x, this.pos.y);
+			pjs.fill(200,240);
+			if(this.timeoutLeft > 0){
+				this.timeoutLeft = 1000 - ((new Date()) - this.lastTimeout);
+				var radLeft = 2*Math.PI * (this.timeoutLeft / this.timeout);
+				pjs.arc(this.pos.x, this.pos.y, this.rad*2, this.rad*2, 0, radLeft);
+			}
+		},
+
+		deepClone: function(){
+			var clone = new Timer(this.pos.x, this.pos.y, this.rad, this.color);
+			return clone;
 		},
 
 		eval: function(sprite){
 			var obj = this;
+			this.showReaction();
+			this.lastTimeout = new Date();
+			this.timeoutLeft = this.timeout;
 			var timer = setTimeout(function(){
 				obj.showReaction();
 				for(var i=0; i<obj.connected.length; i++){
@@ -491,7 +691,7 @@ var play = function(pjs) {
 	var Touch = Class.create(Button, {
 		initialize: function($super, x, y, rad){
 			this.timeout = 1000;
-			$super(x, y, rad, pjs.color(255,159,128));
+			$super(x, y, rad, pjs.color(247,175,99));
 		},
 
 		render: function($super){
@@ -500,44 +700,13 @@ var play = function(pjs) {
 			pjs.text("^", this.pos.x, this.pos.y+this.rad/4);
 		},
 
+		deepClone: function(){
+			var clone = new Touch(this.pos.x, this.pos.y, this.rad, this.color);
+			return clone;
+		},
+
 		doneEval: function(sprite){
 			this.showReaction();
-			console.log(this.pos.x + " FIRED");
-			for(var i=0; i<this.connected.length; i++){
-				this.connected[i].eval(sprite);
-			}
-		},
-
-		eval: function(sprite){
-			console.log("EVAL Touch @" + this.pos.x);
-			if(sprite){
-				taps.push({
-					button: this,
-					sprite: sprite
-				});
-			}
-		}
-
-	});
-
-	var Tilt = Class.create(Button, {
-		initialize: function($super, x, y, rad){
-			this.timeout = 1000;
-			$super(x, y, rad, pjs.color(193,133,143));
-			FIRED = 0;
-		},
-
-		render: function($super){
-			$super();
-			pjs.fill(70);
-			pjs.text("/", this.pos.x, this.pos.y+this.rad/4);
-		},
-
-		doneEval: function(sprite){
-			FIRED++;
-			if(FIRED > 1000){
-				return;
-			}
 			console.log(this.pos.x + " FIRED");
 			for(var i=0; i<this.connected.length; i++){
 				this.connected[i].eval(sprite);

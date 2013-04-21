@@ -1,6 +1,7 @@
 @bkg: rgb(250,250,250);
 @terminalbkg: rgb(220,220,220);
 @terminaltext: rgb(60,60,60);
+@textcol: rgb(60,60,60);
 
 .rounded-corners (@radius: 8px) {
   border-radius: @radius;
@@ -9,9 +10,9 @@
 }
 
 .shadow(@drop: 10px){
-	-webkit-box-shadow: 0px 1px @drop rgba(0,0,0,0.25);
- 	-moz-box-shadow: 0px 1px @drop rgba(0,0,0,0.25);
- 	box-shadow: 0px 1px @drop rgba(0,0,0,0.25);
+    -webkit-box-shadow: 0px 1px @drop rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 1px @drop rgba(0,0,0,0.25);
+    box-shadow: 0px 1px @drop rgba(0,0,0,0.25);
 }
 
 .noselect{
@@ -22,58 +23,126 @@
 
 .rotate(@deg: 180deg){
     -moz-transform:rotate(@deg);
-	-webkit-transform:rotate(@deg);
-	-o-transform:rotate(@deg);
-	-ms-transform:rotate(@deg);
+    -webkit-transform:rotate(@deg);
+    -o-transform:rotate(@deg);
+    -ms-transform:rotate(@deg);
 }
 
 .ease (@time: .2s) {
-	-webkit-transition: all @time ease-in-out;
+    -webkit-backface-visibility: hidden; /* Prevents flickering */
+    -webkit-transition: all @time ease-in-out;
     -moz-transition: all @time ease-in-out;
     -o-transition: all @time ease-in-out;
     -ms-transition: all @time ease-in-out;
 }
 
+.scale (@amount: 1.2){   
+    -webkit-transform: scale( @amount );
+    -moz-transform: scale( @amount );
+    -o-transform: scale( @amount );
+    -ms-transform: scale( @amount );
+}
+
+
 body{
-	background-color:@bkg;
-	font-family:'Helvetica Light', 'Helvetica';
-	font-weight: lighter;
-	overflow: hidden;
-	color:rgb(100,100,100);
-	margin: 0;
+    background-color:@bkg;
+    font-family:'Helvetica Light', 'Helvetica';
+    font-weight: lighter;
+    overflow: hidden;
+    color:rgb(100,100,100);
+    margin: 0;
+    .noselect;
 }
 
 #pcanvas{
-		outline: none;
-	  	-webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
-		position:absolute;
-		top:0;
-		left: 0px;
-		margin:0;
-		padding:0;
-		background-color: rgb(250,250,250);
-	
+        outline: none;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+        position:absolute;
+        top:0;
+        left: 0px;
+        margin:0;
+        padding:0;
+        background-color: rgb(250,250,250);
+    
 }
 
-.info{
-	position:absolute;
-	top:8px;
-	right:15px;
-	opacity: .6;
-	.ease;
+#sketch-holder{
+    position: relative;
+    margin: 0;
+    top:0;
+    left:0;
+    height: 2000px;
+    background-color: @terminalbkg;
+    z-index: 9999;
+    padding: 25px;
+    .ease;
+    overflow: hidden;
 }
 
-.info:hover{
-	opacity:.8;
+#sketchcanvas{
+        outline: none;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+        margin:0;
+        padding:0;
+        position:absolute;
+        top:30px;
+        right:30px;
+        background-color: rgb(250,250,250);
 }
+
+#message{
+    font-size: 30px;
+}
+
+.button{
+    color: @textcol;
+    font-family: monospace;
+    margin-top: 10px;
+    width:40px;
+    height:40px;
+    margin-bottom: 0px;
+    text-align:center;
+    display: inline;
+    opacity:.8;
+    padding: 15px;
+}
+
+.button i{
+    color:rgb(60,60,60);
+    font-size: 100px;
+}
+
+.button:active{
+    opacity:1;
+}
+
+.color_option{
+    
+    width:50px;
+    height:70px;
+    .ease;
+    margin: 5px;
+    display: inline-block;
+}
+
+#color-holder{
+    width: 45%;
+    height:600px;
+    overflow:scroll;
+}
+
+.color_option:active{
+    .scale;
+}
+
 
 i{
-	color:rgb(20,20,20);
-	font-size: 70px;
+    color:rgb(20,20,20);
+    font-size: 70px;
 }
 
 a{
-	text-decoration:none;
+    text-decoration:none;
 }
 
 .helpToggle{
@@ -82,67 +151,15 @@ a{
     right: 0;
     background-color: darken(@bkg,10%);
     color: rgb(100,100,100);
-    
-    padding: 10px;
+    padding: 15px;
     margin: 5px;
-    width: 60px;
+
     .rounded-corners;
     .noselect;
     border: none;
     
     i{
-        font-size: 50px;
-    }
-}
-
-.toggle{
-    opacity: .8;
-    .ease(.15s);
-    i{
-        color: rgb(40,40,40);
-    }
-    
-}
-
-.toggle:hover{
-    opacity: 1;
-}
-
-.menuToggle{
-    position: absolute;
-    top:0px;
-    right: 70px;
-    background-color: darken(@bkg,10%);
-    color: rgb(100,100,100);
-    padding: 10px;
-    margin: 5px;
-    width: 60px;
-    .rounded-corners;
-    .noselect;
-    border: none;
-    
-    i{
-        font-size: 50px;
-    }
-}
-
-.help{
-    position: absolute;
-    top:80px;
-    right: -500px;
-    background-color: darken(@bkg,10%);
-    color: rgb(100,100,100);
-    opacity: .7;
-    width:400px;
-    padding: 20px;
-    margin: 5px;
-    font-size: 30px;
-    .rounded-corners;
-    .noselect;
-    .ease;
-    a{
-        text-decoration:underline;
-        color: rgb(100,100,100);
+        font-size: 60px;
     }
 }
 

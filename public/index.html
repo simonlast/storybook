@@ -4,36 +4,39 @@
     <title>Storeographer</title>
     <link type="text/css" rel="stylesheet" href="style.css"/>
     <link rel="shortcut icon" href="http://www.gravatar.com/avatar/3b964d84fcfbcdf59089c8bd7309f0b7.ico" />
-    <link rel="stylesheet" href="font-awesome.css">
+    <link rel="stylesheet" href="/assets/font-awesome.css">
+    <link rel="stylesheet" href="/assets/animate.css">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=.9, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
   </head>
   <body>
     <canvas id="pcanvas"></canvas>
 
-    <button onmousedown="toggleLoop()" class="toggle helpToggle">
+    <button id="help" class="helpToggle">
       <i class="icon-play"></i>
     </button>
     
-    <script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
-    <script type="text/javascript" src="hammer.min.js"></script>
-    <script type="text/javascript" src="processing.js"></script>
-    <script type="text/javascript" src="app.js"></script>
-
-    <script type="text/javascript">
-
-      var tg = true;
-
-      var toggleLoop = function(){
-        tg = !tg;
-        if(tg)
-          pjs.loop();
-        else
-          pjs.noLoop();
-      };
-
-      Hammer(canvas).on("touch", pjs.touch);
-      Hammer(canvas).on("release", pjs.release);
-      Hammer(canvas).on("drag", pjs.drag);
-
+    <script id="sketch-template" type="text/x-handlebars">
+      <div class="animated fadeInUpBig" id="sketch-holder">
+        <div id="message"></div><br />
+        <div class="button" id="cmd_finish_sketch"><i class="icon-ok-sign"></i></div>
+        <div class="button" id="cmd_undo"><i class="icon-undo"></i></div>
+        <div class="button" id="cmd_decsize"><i class="icon-minus-sign"></i></div>
+        <div class="button" id="cmd_incsize"><i class="icon-plus-sign"></i></div>
+        <br /><br />
+        <div id="color-holder"></div>
+        <canvas id="sketchcanvas"></canvas>
+      </div>
     </script>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+    <script type="text/javascript" src="/assets/hammer.min.js"></script>
+    <script type="text/javascript" src="/assets/handlebars.js"></script>
+    <script type="text/javascript" src="/assets/processing.js"></script>
+    <script type="text/javascript" src="/app/view.js"></script>
+    <script type="text/javascript" src="/app/sketch.js"></script>
+    <script type="text/javascript" src="/app/config.js"></script>
   </body>
 </html>
