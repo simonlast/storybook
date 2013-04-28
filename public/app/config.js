@@ -1,13 +1,19 @@
 
 //set up touch events
-var hammer = Hammer(document.body, {prevent_default: true});
-
-canvas.on("touch", pjs.touch);
-canvas.on("release", pjs.release);
-canvas.on("drag", pjs.drag);
+//var hammer = Hammer(document.body, {prevent_default: true, drag_max_touches: 10});
+//canvas.on("touchstart", pjs.touch);
+//canvas.on("touchend", pjs.release);
+//canvas.on("touchmove", pjs.drag);
 
 $help = document.getElementById('help');
-$help.on("touch", pjs.toggleViewMode);
+$help.on("touchend", pjs.toggleViewMode);
+
+
+window.onerror = function(msg, url, linenumber) {
+    alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+    return true;
+}
+
 
 //define colors for color picker
 var colorArr = [
@@ -75,12 +81,12 @@ var colorArr = [
         {r: 2,g: 170,b: 176},
         {r: 0,g: 205,b: 172},
         {r: 127,g: 255,b: 36},
-        {r: 195,g: 255,b: 104},
+        {r: 195,g: 255,b: 104}/*,
 
         {r: 204,g: 12,b: 57},
         {r: 230,g: 120,b: 30},
         {r: 200,g: 207,b: 2},
         {r: 248,g: 252,b: 193},
-        {r: 22,g: 147,b: 167},
+        {r: 22,g: 147,b: 167},*/
     ];
 

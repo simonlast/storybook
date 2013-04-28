@@ -21,6 +21,20 @@
    -webkit-user-select: none;
 }
 
+.select_text{
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+}
+
+.select_all{
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -khtml-user-select: all;
+}
+
 .rotate(@deg: 180deg){
     -moz-transform:rotate(@deg);
     -webkit-transform:rotate(@deg);
@@ -51,7 +65,6 @@ body{
     overflow: hidden;
     color:rgb(100,100,100);
     margin: 0;
-    .noselect;
 }
 
 #pcanvas{
@@ -63,6 +76,7 @@ body{
         margin:0;
         padding:0;
         background-color: rgb(250,250,250);
+        
     
 }
 
@@ -77,6 +91,34 @@ body{
     padding: 25px;
     .ease;
     overflow: hidden;
+    .noselect;
+}
+
+#dialog-holder{
+    position: relative;
+    margin: 0;
+    top:0;
+    left:0;
+    height: 2000px;
+    background-color: @bkg;
+    color: @textcol;
+    z-index: 999;
+    padding: 25px;
+    .ease;
+    overflow: scroll;
+    font-size: 100px;
+    outline: none;
+    border: none;
+}
+
+#cmd_finish_dialog{
+    position:absolute;
+    top:0px;
+    width: 100px;
+    height: 100px;
+    right:0px;
+    z-index: 9999;
+    background:none;
 }
 
 #sketchcanvas{
@@ -86,7 +128,7 @@ body{
         padding:0;
         position:absolute;
         top:30px;
-        right:30px;
+        right:15px;
         background-color: rgb(250,250,250);
 }
 
@@ -105,6 +147,7 @@ body{
     display: inline;
     opacity:.8;
     padding: 15px;
+    .noselect;
 }
 
 .button i{
@@ -123,6 +166,7 @@ body{
     .ease;
     margin: 5px;
     display: inline-block;
+    .noselect;
 }
 
 #color-holder{
@@ -132,7 +176,7 @@ body{
 }
 
 .color_option:active{
-    .scale;
+    .scale(1.2);
 }
 
 
@@ -163,11 +207,34 @@ a{
     }
 }
 
+#cmd_finish_sketch i{
+    color: darken(rgb(121,189,154), 10%);
+}
+
 #info{
     background-color: darken(@bkg,15%);
     padding: 10px;
     .rounded-corners;
 }
+
+#narrate{
+    font-size:50px;
+    background: none;
+    .rounded-corners;
+    padding: 15px;
+    position:absolute;
+    top:0;
+    left:0;
+    text-align:center;
+    .ease;
+    .noselect;
+    opacity:.8;
+}
+
+#narrate:hover{
+    background: @bkg;
+}
+
 
 
 

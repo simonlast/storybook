@@ -3,6 +3,18 @@
   -khtml-user-select: none;
   -webkit-user-select: none;
 }
+.select_text {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -khtml-user-select: text;
+}
+.select_all {
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -khtml-user-select: all;
+}
 body {
   background-color: #fafafa;
   font-family: 'Helvetica Light', 'Helvetica';
@@ -10,9 +22,6 @@ body {
   overflow: hidden;
   color: #646464;
   margin: 0;
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
 }
 #pcanvas {
   outline: none;
@@ -43,6 +52,40 @@ body {
   -o-transition: all 0.2s ease-in-out;
   -ms-transition: all 0.2s ease-in-out;
   overflow: hidden;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+}
+#dialog-holder {
+  position: relative;
+  margin: 0;
+  top: 0;
+  left: 0;
+  height: 2000px;
+  background-color: #fafafa;
+  color: #3c3c3c;
+  z-index: 999;
+  padding: 25px;
+  -webkit-backface-visibility: hidden;
+  /* Prevents flickering */
+
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  overflow: scroll;
+  font-size: 100px;
+  outline: none;
+  border: none;
+}
+#cmd_finish_dialog {
+  position: absolute;
+  top: 0px;
+  width: 100px;
+  height: 100px;
+  right: 0px;
+  z-index: 9999;
+  background: none;
 }
 #sketchcanvas {
   outline: none;
@@ -53,7 +96,7 @@ body {
   padding: 0;
   position: absolute;
   top: 30px;
-  right: 30px;
+  right: 15px;
   background-color: #fafafa;
 }
 #message {
@@ -70,6 +113,9 @@ body {
   display: inline;
   opacity: .8;
   padding: 15px;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
 }
 .button i {
   color: #3c3c3c;
@@ -90,6 +136,9 @@ body {
   -ms-transition: all 0.2s ease-in-out;
   margin: 5px;
   display: inline-block;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
 }
 #color-holder {
   width: 45%;
@@ -128,10 +177,39 @@ a {
 .helpToggle i {
   font-size: 60px;
 }
+#cmd_finish_sketch i {
+  color: #57ac80;
+}
 #info {
   background-color: #d4d4d4;
   padding: 10px;
   border-radius: 8px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
+}
+#narrate {
+  font-size: 50px;
+  background: none;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  padding: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  -webkit-backface-visibility: hidden;
+  /* Prevents flickering */
+
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  opacity: .8;
+}
+#narrate:hover {
+  background: #fafafa;
 }

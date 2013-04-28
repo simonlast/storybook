@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Storeographer</title>
+    <title>Storybook</title>
     <link type="text/css" rel="stylesheet" href="style.css"/>
     <link rel="shortcut icon" href="http://www.gravatar.com/avatar/3b964d84fcfbcdf59089c8bd7309f0b7.ico" />
     <link rel="stylesheet" href="/assets/font-awesome.css">
@@ -15,28 +15,35 @@
     <button id="help" class="helpToggle">
       <i class="icon-play"></i>
     </button>
-    
+
     <script id="sketch-template" type="text/x-handlebars">
       <div class="animated fadeInUpBig" id="sketch-holder">
         <div id="message"></div><br />
         <div class="button" id="cmd_finish_sketch"><i class="icon-ok-sign"></i></div>
-        <div class="button" id="cmd_undo"><i class="icon-undo"></i></div>
-        <div class="button" id="cmd_decsize"><i class="icon-minus-sign"></i></div>
-        <div class="button" id="cmd_incsize"><i class="icon-plus-sign"></i></div>
+        <div class="button paint_control" id="cmd_undo"><i class="icon-undo"></i></div>
+        <div class="button paint_control" id="cmd_decsize"><i class="icon-minus-sign"></i></div>
+        <div class="button paint_control" id="cmd_incsize"><i class="icon-plus-sign"></i></div>
         <br /><br />
         <div id="color-holder"></div>
-        <canvas id="sketchcanvas"></canvas>
+        <canvas id="sketchcanvas" autofocus></canvas>
       </div>
+    </script>
+
+    <script id="dialog-template" type="text/x-handlebars">
+        <textarea id="dialog-holder" autofocus></textarea>
+        <div class="button" id="cmd_finish_dialog"><i class="icon-ok-sign"></i></div>
     </script>
 
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
-    <script type="text/javascript" src="/assets/hammer.min.js"></script>
-    <script type="text/javascript" src="/assets/handlebars.js"></script>
-    <script type="text/javascript" src="/assets/processing.js"></script>
+    <!--<script type="text/javascript" src="/assets/hammer.min.js"></script>-->
+    <!--<script type="text/javascript" src="/assets/handlebars.js"></script>-->
+    <script type="text/javascript" src="/assets/processing-touch-fixed.js"></script>
     <script type="text/javascript" src="/app/view.js"></script>
+    <script type="text/javascript" src="/app/orientation.js"></script>
     <script type="text/javascript" src="/app/sketch.js"></script>
+    <script type="text/javascript" src="/app/dialog.js"></script>
     <script type="text/javascript" src="/app/config.js"></script>
   </body>
 </html>

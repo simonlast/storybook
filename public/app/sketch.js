@@ -100,6 +100,7 @@ SketchTool.play = function(pjs) {
 
 		this.render = function(){
 			pjs.beginShape();
+
   			pjs.stroke(this.color);
   			pjs.strokeWeight(this.radius);
   			pjs.noFill();
@@ -147,8 +148,11 @@ SketchTool.color = function(sketch,r,g,b){
 		});
 		
 		var currObj = this;
-		this.domEl.on("release", function(ev){
+		this.domEl.on("touchend", function(ev){
 			//ev.gesture.preventDefault();
+			currObj.domEl.css({
+				'border-width': '10px'
+			});
 			currObj.sketch.changeColor(currObj.r, currObj.g, currObj.b);
 		});
 	}
@@ -203,24 +207,20 @@ SketchTool.create = function(options){
 
 	SketchTool.createColors(jQuery('#color-holder'), sketch, colorArr);
 
-	document.getElementById('cmd_incsize').on("release", function(ev){
-		ev.gesture.preventDefault();
+	document.getElementById('cmd_incsize').on("touchend", function(ev){
         sketch.incRadius(5);
     });
 
-    document.getElementById('cmd_decsize').on("release", function(ev){
-    	ev.gesture.preventDefault();
+    document.getElementById('cmd_decsize').on("touchend", function(ev){
         sketch.incRadius(-5);
     });
 
-    document.getElementById('cmd_undo').on("release", function(ev){
-    	ev.gesture.preventDefault();
+    document.getElementById('cmd_undo').on("touchend", function(ev){
         sketch.undoStroke();
     });
 
     //runs after sketch is finished
-    document.getElementById('cmd_finish_sketch').on("release", function(ev){
-    	ev.gesture.preventDefault();
+    document.getElementById('cmd_finish_sketch').on("touchend", function(ev){
     	console.log(SketchTool.options);
 		if(SketchTool.options.onComplete){
 			SketchTool.options.onComplete(sketch);
