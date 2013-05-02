@@ -7,6 +7,8 @@ SketchTool.play = function(pjs) {
 
 	var bkg, strokes, defaultCol, currColor, currRadius;
 
+	var $sketch = jQuery("#sketchcanvas");
+
 	pjs.setup = function(){
 		pjs.size(SketchTool.options.width,SketchTool.options.height);
 		pjs.noStroke();
@@ -32,21 +34,42 @@ SketchTool.play = function(pjs) {
 		}
 	};
 
-	pjs.mousePressed = function(){
+	pjs.touchStart = function(event){
+		event.preventDefault(); 
+		var touch = new pjs.PVector();
+		var offset = $sketch.offset();
+
+		for(var i=0; i<event.targetTouches.length; i++){
+			var curr = event.targetTouches[i];
+			touch.add(new pjs.PVector(curr.pageX - offset.left, curr.pageY - offset.top));
+		}
+		touch.div(event.targetTouches.length);
+
 	   	var stroke = new pjs.Stroke(
-	  		[new pjs.PVector(pjs.mouseX,pjs.mouseY)],
+	  		[new pjs.PVector(touch.x, touch.y)],
 	    	currColor,
 	    	currRadius);
 	    strokes.push(stroke);
 	    pjs.loop();
 	};
 
-	pjs.mouseDragged = function(){
+	pjs.touchMove = function(event){
+		event.preventDefault(); 
+		pjs.loop();
+		var touch = new pjs.PVector();
+		var offset = $sketch.offset();
+		for(var i=0; i<event.targetTouches.length; i++){
+			var curr = event.targetTouches[i];
+			touch.add(new pjs.PVector(curr.pageX - offset.left, curr.pageY - offset.top));
+		}
+		touch.div(event.targetTouches.length);
+
 		var currStroke = strokes[strokes.length-1];
-  		currStroke.addPoint(new pjs.PVector(pjs.mouseX,pjs.mouseY));
+  		currStroke.addPoint(new pjs.PVector(touch.x, touch.y));
 	};
 
-	pjs.mouseReleased = function(){
+	pjs.touchEnd = function(event){
+		event.preventDefault(); 
   		pjs.noLoop();
 	};
 
@@ -99,8 +122,8 @@ SketchTool.play = function(pjs) {
 		this.radius = radius;
 
 		this.render = function(){
-			pjs.beginShape();
 
+			pjs.beginShape();
   			pjs.stroke(this.color);
   			pjs.strokeWeight(this.radius);
   			pjs.noFill();
@@ -205,6 +228,8 @@ SketchTool.create = function(options){
 	sketch.getPNG = SketchTool.getPNG;
 	sketch.undoStroke = sketch.processingInstance.undoStroke;
 
+	jQuery('#sketch-holder').on("touchmove", false);
+
 	SketchTool.createColors(jQuery('#color-holder'), sketch, colorArr);
 
 	document.getElementById('cmd_incsize').on("touchend", function(ev){
@@ -221,7 +246,6 @@ SketchTool.create = function(options){
 
     //runs after sketch is finished
     document.getElementById('cmd_finish_sketch').on("touchend", function(ev){
-    	console.log(SketchTool.options);
 		if(SketchTool.options.onComplete){
 			SketchTool.options.onComplete(sketch);
 		}

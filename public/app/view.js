@@ -4,6 +4,9 @@ var play = function(pjs) {
 	//style
 	var bkg = pjs.color(250);
 
+	var MAX_EVALS = 5000; //prevent infinite loops
+	var CURR_EVALS = 0;
+
 	//global vars
 	var buttons = [];
 	var anchors = [];
@@ -127,6 +130,7 @@ var play = function(pjs) {
 
 	//this is a Hammer.js touch event
 	pjs.touchStart = function(event){
+		event.preventDefault(); 
 		var touch = new pjs.PVector();
 
 		//calculate average
@@ -178,6 +182,7 @@ var play = function(pjs) {
 
 	//this is a Hammer.js touch event
 	pjs.touchMove = function(event){
+		event.preventDefault(); 
 		var touches = event.targetTouches;
 
 		if(touches.length == 1 && !pinch){
@@ -219,7 +224,7 @@ var play = function(pjs) {
 
 	//this is a Hammer.js touch event
 	pjs.touchEnd = function(event){
-
+		event.preventDefault(); 
 		var touch = new pjs.PVector();
 
 		//calculate average
@@ -249,7 +254,7 @@ var play = function(pjs) {
 					var nearest = findNearestVec(buttons, mouse);
 					if(nearest.dist <= nearest.el.rad)
 						currButton.connect(nearest.el);
-						connectButton = null;
+					connectButton = null;
 				}else{
 					//remove from canvas if over toolbox
 					if(currButton.pos.y - currButton.rad >= toolboxCenter.y - toolboxDimen.y/2){
@@ -330,6 +335,8 @@ var play = function(pjs) {
 		taps = [];
 		shakes = [];
 		narrator.narrate('',0,0);
+
+		CURR_EVALS = 0;
 	};
 
 	/*
@@ -426,9 +433,11 @@ var play = function(pjs) {
 			this.tweens = {
 				opacity: 0
 			}
+			this.fontSize = 60;
 			this.last = {
 				text: '',
-				pos: new pjs.PVector()
+				pos: new pjs.PVector(),
+				fontSize: this.fontSize
 			}
 		},
 
@@ -440,23 +449,26 @@ var play = function(pjs) {
 			this.tween();
 			
 			if(this.text){
-				pjs.textSize(60);
+				pjs.textSize(this.fontSize);
 				pjs.fill(60,this.tweens.opacity);
 				pjs.text(this.text, this.pos.x, this.pos.y, sayDist.x, sayDist.y);
+				pjs.textSize(this.last.fontSize);
 				pjs.fill(60,100 - this.tweens.opacity);
 				pjs.text(this.last.text, this.last.pos.x, this.last.pos.y, sayDist.x, sayDist.y);
 				pjs.textSize(30);
 			}
 		},
 
-		narrate: function(text, x, y){
+		narrate: function(text, x, y, fontSize){
 			this.last.pos.x = this.pos.x;
+			this.last.fontSize = this.fontSize;
 			this.last.pos.y = this.pos.y;
 			this.last.text = this.text;
 			this.pos.x = x - sayDist.x/2;
 			this.pos.y = y - 150;
 			this.text = text;
 			this.opacity = 100;
+			this.fontSize = fontSize;
 			this.tweens.opacity = 0;
 		}
 	});
@@ -612,8 +624,6 @@ var play = function(pjs) {
 
 			pjs.fill(100,60);
 			pjs.ellipse(this.pos.x, this.pos.y, (this.spring + 5)*2, (this.spring + 5)*2);
-			//pjs.fill(this.color);
-			//pjs.ellipse(this.pos.x, this.pos.y, this.rad*2, this.rad*2);
 
 		},
 
@@ -769,7 +779,6 @@ var play = function(pjs) {
 		},
 
 		disconnect: function(other){
-			console.log(this);
 			this.connected = this.connected.filter(function(el){
 				return el != other;
 			});
@@ -778,6 +787,22 @@ var play = function(pjs) {
 			other.connectsToThis = other.connectsToThis.filter(function(el){
 				return el != obj;
 			});
+		},
+
+		propagate: function(sprite){
+			CURR_EVALS++;
+			if(CURR_EVALS >= MAX_EVALS){
+				if(CURR_EVALS == MAX_EVALS){
+					window.alert("Oh dear, there seems to be a lot of looping...");
+					currButton = null;
+					connectButton = null;
+				}
+				return;
+			}
+
+			for(var i=0; i<this.connected.length; i++){
+				this.connected[i].eval(sprite);
+			}
 		}
 	});
 
@@ -822,15 +847,12 @@ var play = function(pjs) {
 		},
 
 		eval: function(sprite){
-			console.log("EVAL Anchor @" + this.pos.x);
 			if(!this.sprite.image){
 				this.sprite.createImage();
 			}else{
 				this.showReaction();
 				this.move(this.pos.x, this.pos.y);
-				for(var i=0; i<this.connected.length; i++){
-					this.connected[i].eval(this.sprite);
-				}	
+				this.propagate(this.sprite);
 			}
 			
 		}
@@ -852,9 +874,7 @@ var play = function(pjs) {
 			pjs.image(images['Move'], this.pos.x, this.pos.y, this.spring*2, this.spring*2);
 			if(this.sprite){
 				var dist = pjs.PVector.sub(this.sprite.tweens.pos, this.spriteOrig).mag();
-				//console.log(dist);
 				var diff = this.distToSprite - dist
-				//console.log(diff);
 
 				var len = this.rad*2 - 20;
 				var circleDiff = len - (diff / this.distToSprite) * len + 5;
@@ -877,7 +897,6 @@ var play = function(pjs) {
 		},
 
 		eval: function(sprite){
-			console.log("EVAL Move @" + this.pos.x);
 			this.showReaction();
 			if(sprite){
 				//original pos of sprite
@@ -887,9 +906,7 @@ var play = function(pjs) {
 				this.sprite = sprite;
 				this.distToSprite = pjs.PVector.sub(sprite.pos, this.spriteOrig).mag();
 			}
-			for(var i=0; i<this.connected.length; i++){
-				this.connected[i].eval(sprite);
-			}
+			this.propagate(sprite);
 		}
 
 	});
@@ -943,12 +960,9 @@ var play = function(pjs) {
 		},
 
 		eval: function(sprite){
-			console.log("EVAL Move @" + this.pos.x);
 			this.showReaction();
 			sprite.rot += this.rotateAmount;
-			for(var i=0; i<this.connected.length; i++){
-				this.connected[i].eval(sprite);
-			}
+			this.propagate(sprite);
 		},
 
 		//user can change timeout
@@ -963,8 +977,10 @@ var play = function(pjs) {
 				higher = touch2;
 				lower = touch1;
 			}
+
 			var diff = pjs.PVector.sub(lower, higher);
 			var angle = pjs.PVector.angleBetween(new pjs.PVector(0,1), diff);
+
 			if(higher.x < lower.x){
 				angle *= -1;
 			}
@@ -981,6 +997,8 @@ var play = function(pjs) {
 			this.spriteOrig = null;
 			this.sprite = null;
 			this.distToSprite = null;
+
+			this.fontSize = 60;
 		},
 
 		render: function($super){
@@ -996,30 +1014,26 @@ var play = function(pjs) {
 		move: function($super, x, y){
 			$super(x, y);
 			if(this.text){
-				narrator.narrate(this.text, this.pos.x, this.pos.y);
+				narrator.narrate(this.text, this.pos.x, this.pos.y, this.fontSize);
 				narrator.tweens.opacity = narrator.opacity;
 			}
 		},
 
 		setText: function(){
 			if(!this.text){
-				//this.text = window.prompt('Tell me what to say:');
-				var obj = this;
+				this.text = window.prompt('Tell me what to say:');
+				/*var obj = this;
 				Dialog.dialog(function(text){
 					obj.text = text;
-					console.log(text);
-				});
+				});*/
 			}
 		},
 
 		eval: function(sprite){
-			console.log("EVAL Say @" + this.pos.x);
 			if(this.text)
-				narrator.narrate(this.text, this.pos.x, this.pos.y);
+				narrator.narrate(this.text, this.pos.x, this.pos.y, this.fontSize);
 			this.showReaction();
-			for(var i=0; i<this.connected.length; i++){
-				this.connected[i].eval(sprite);
-			}
+			this.propagate(sprite);
 		}
 
 	});
@@ -1042,11 +1056,7 @@ var play = function(pjs) {
 			}else{
 				this.spring += 10;
 			}
-
-			console.log(this.pos.x + " FIRED");
-			for(var i=0; i<this.connected.length; i++){
-				this.connected[i].eval(sprite);
-			}
+			this.propagate(sprite);
 		},
 
 		eval: function(sprite){
@@ -1133,7 +1143,6 @@ var play = function(pjs) {
 		},
 
 		eval: function($super, sprite){
-			console.log("EVAL Touch @" + this.pos.x);
 			$super(sprite);
 			if(sprite){
 				taps.push({
@@ -1178,7 +1187,6 @@ var play = function(pjs) {
 		},
 
 		eval: function($super, sprite){
-			console.log("EVAL Shake @" + this.pos.x);
 			$super(sprite);
 			this.rotV = addV;
 			if(sprite){

@@ -14,6 +14,12 @@ var handleMotionEvent = function(event){
  
 window.addEventListener("devicemotion", handleMotionEvent, true);
 
+/*
+window.addEventListener('deviceorientation', function(event){
+  event.preventDefault();
+}, false);
+*/
+
 var ShakeController = Class.create({
   initialize: function(){
     this.last = {
