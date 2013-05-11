@@ -4,6 +4,25 @@ var play = function(pjs) {
 	//style
 	var bkg = pjs.color(250);
 
+	//story structure
+	/*
+		[
+			page: { 
+				tabs: [
+					tab: {
+						buttons: [...],
+						sprites: [...]
+					},
+					...
+				]	
+			},
+			...
+		]
+	*/
+
+	var tabs = [];
+	currTabIndex = 0;
+
 	var MAX_EVALS = 5000; //prevent infinite loops
 	var CURR_EVALS = 0;
 
@@ -103,6 +122,11 @@ var play = function(pjs) {
 
 		mouse = new pjs.PVector();
 		narrator = new Narrator();
+
+		tabs.push({
+			buttons: buttons,
+			sprites: sprites
+		})
 	};
 
 	pjs.draw = function(){
@@ -123,7 +147,8 @@ var play = function(pjs) {
 				buttons[i].render();
 			}
 
-			drawToolbox();	
+			drawToolbox();
+			drawTabMenu();	
 		}
 
 	};
@@ -156,6 +181,10 @@ var play = function(pjs) {
 			mouse.x >= toolboxCenter.x - toolboxDimen.x/2 &&
 			mouse.x <= toolboxCenter.x + toolboxDimen.x/2){
 			activateToolbox();
+			return;
+		}
+
+		if(activateTabMenu()){
 			return;
 		}
 
@@ -308,6 +337,46 @@ var play = function(pjs) {
 		}else{
 			draggingToolbox = true;
 		}
+	};
+
+	var drawTabMenu = function(){
+		pjs.fill(100,100);
+
+		var tabArray = getTabArray();
+
+		for(var i=0; i<tabs.length; i++){
+			if(i == currTabIndex){
+				pjs.ellipse(tabArray[i], 0, buttonRad*2 + 20, buttonRad*2 + 20);
+				pjs.ellipse(tabArray[i], 0, buttonRad*2, buttonRad*2);
+			}else{
+				pjs.ellipse(tabArray[i], 0, buttonRad*2, buttonRad*2);
+			}
+		}
+
+		//add new tab button
+		pjs.fill(200,100);
+		pjs.ellipse(tabs.length*150 + 100, 0, buttonRad*2, buttonRad*2);
+	};
+
+	var getTabArray = function(){
+		var tabArray = [];
+		for(var i=0; i<tabs.length+1; i++){
+			tabArray.push(i*150 + 100);
+		}
+		return tabArray;
+	};
+
+	var activateTabMenu = function(){
+
+		var tabArray = getTabArray();
+		var nearestTab = findNearestVec(tabArray, mouse);
+
+		if(nearestTab && nearestTab.el && nearestTab.dist < buttonRad){
+			console.log("tab");
+			return true;
+		}
+
+		return false;
 	};
 
 	/*
