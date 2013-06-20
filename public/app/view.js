@@ -30,6 +30,7 @@ var play = function(pjs) {
 	var buttons = [];
 	var anchors = [];
 	var sprites = [];
+	var startButton;
 	var mouse;
 	var narrator;
 
@@ -127,6 +128,9 @@ var play = function(pjs) {
 			buttons: buttons,
 			sprites: sprites
 		})
+
+		startButton = new Start(0, pjs.height/2, buttonRad);
+		buttons.push(startButton);
 	};
 
 	pjs.draw = function(){
@@ -184,9 +188,9 @@ var play = function(pjs) {
 			return;
 		}
 
-		if(activateTabMenu()){
+		/*if(activateTabMenu()){
 			return;
-		}
+		}*/
 
 		//check for button hit
 		var nearest = findNearestVec(buttons, mouse);
@@ -277,6 +281,8 @@ var play = function(pjs) {
 			draggingToolbox = false;
 		}
 		else if(currButton){
+			var wasNew = currButton.isNew;
+			currButton.isNew = false;
 			if(!pinch){
 				//connect curr to another button
 				if(connectButton){
@@ -289,6 +295,11 @@ var play = function(pjs) {
 					if(currButton.pos.y - currButton.rad >= toolboxCenter.y - toolboxDimen.y/2){
 						currButton.removeFromCanvas();
 						currButton = null;
+					}else if(wasNew){
+						var nearest = currButton.nearestButton();
+						if(nearest.el && nearest.dist < currButton.snapConnectDist){
+							nearest.el.connect(currButton);
+						}
 					}
 				}
 
@@ -301,6 +312,7 @@ var play = function(pjs) {
 				currButton.springOrig = currButton.rad; //reset spring after pinch gesture
 			}
 
+			
 			//re-evaluate entire program
 			evalAll();
 		}
@@ -369,6 +381,7 @@ var play = function(pjs) {
 	var activateTabMenu = function(){
 
 		var tabArray = getTabArray();
+		console.log(tabArray);
 		var nearestTab = findNearestVec(tabArray, mouse);
 
 		if(nearestTab && nearestTab.el && nearestTab.dist < buttonRad){
@@ -385,9 +398,10 @@ var play = function(pjs) {
 	*/
 	var evalAll = function(){
 		clearAllTimeouts();
-		for(var i=0; i<anchors.length; i++){
+		startButton.eval();
+		/*for(var i=0; i<anchors.length; i++){
 			anchors[i].eval();
-		}
+		}*/
 	};
 
 	/*
@@ -628,7 +642,10 @@ var play = function(pjs) {
 			//protruding "nib" used to make a new connection
 			this.connectCircleDist = this.rad + 5;
 			this.connectCircle = new pjs.PVector(0, this.connectCircleDist);
-			this.connectCircleRad = this.rad*2/3;
+			this.connectCircleRad = this.rad*4/5;
+
+			this.snapConnectDist = this.rad*4;
+			this.isNew = true; //button has not been dropped yet
 
 			this.connected = []; //connected in circuit
 			this.connectsToThis = []; //connected to this
@@ -699,6 +716,36 @@ var play = function(pjs) {
 		move: function(x, y){
 			this.pos.x = x;
 			this.pos.y = y;
+		},
+
+		nearestButton: function(){
+
+			var nearest = null,
+				nearestDist = 1e9;
+
+			for(var i=0; i<buttons.length; i++){
+				var curr = buttons[i];
+				if(curr != this){
+					var dist = pjs.PVector.dist(curr.pos, this.pos);
+					if(dist < nearestDist){
+						nearest = curr;
+						nearestDist = dist;
+					}
+				}
+			}
+
+			return {el: nearest,
+				dist: dist};
+		},
+
+		drawPossibleConnectionToThis: function(){
+			if(!this.isNew)
+				return;
+			var nearest = this.nearestButton();
+			if(nearest.el && nearest.dist < this.snapConnectDist){
+				nearest.el.drawLink(nearest.el.pos, this.pos);
+				return;
+			}
 		},
 
 		//used during connection selection
@@ -785,6 +832,9 @@ var play = function(pjs) {
 
 		drawLinks: function(){
 			pjs.fill(this.tweens.linkGray,100);
+			if(this == currButton){
+				this.drawPossibleConnectionToThis();
+			}
 			for(var i=0; i<this.connected.length; i++){
 				this.drawLink(this.pos, this.connected[i].pos);
 			}
@@ -928,6 +978,32 @@ var play = function(pjs) {
 
 	});
 
+	var Start = Class.create(Button, {
+		initialize: function($super, x, y, rad){
+			$super(x, y, rad, pjs.color(168,202,186));
+		},
+
+		render: function($super){
+			$super();
+			pjs.image(images['Anchor'], this.pos.x, this.pos.y, this.spring*2, this.spring*2);
+		},
+
+		move: function($super, x, y){
+
+		},
+
+		deepClone: function(){
+			var clone = new Start(this.pos.x, this.pos.y, this.rad, this.color);
+			return clone;
+		},
+
+		eval: function(sprite){
+			this.showReaction();
+			this.propagate(sprite);
+		}
+
+	});
+
 	var Move = Class.create(Button, {
 		initialize: function($super, x, y, rad){
 			$super(x, y, rad, pjs.color(168,202,186));
@@ -1030,7 +1106,8 @@ var play = function(pjs) {
 
 		eval: function(sprite){
 			this.showReaction();
-			sprite.rot += this.rotateAmount;
+			if(sprite)
+				sprite.rot += this.rotateAmount;
 			this.propagate(sprite);
 		},
 
