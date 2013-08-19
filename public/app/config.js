@@ -1,12 +1,50 @@
 
-$help = document.getElementById('help');
+$help = jQuery("#help");
 $help.on("touchend", pjs.toggleViewMode);
 
-/*
-window.onerror = function(msg, url, linenumber) {
-    alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
-    return true;
-}*/
+window.onload = function(){
+    if(!('ontouchstart' in window)){
+        polyfillEvents();
+    }
+};
+
+var makeTouchEvent = function(e, type){
+
+    var touchEvent = jQuery.Event(type);
+
+    var touches = [
+        {
+            pageX: e.pageX,
+            pageY: e.pageY
+        }
+    ];
+
+    touchEvent.targetTouches = touches;
+    touchEvent.changedTouches = touches;
+
+    $target = jQuery(e.target);
+    $target.trigger(touchEvent);
+};
+
+var polyfillEvents = function(){
+    $doc = jQuery(document);
+    var mouseDown = false;
+
+    $doc.on("mousedown", function(e){
+        mouseDown = true;
+        makeTouchEvent(e, "touchstart");
+    });
+
+    $doc.on("mousemove", function(e){
+        if(mouseDown)
+            makeTouchEvent(e, "touchmove");
+    });
+
+    $doc.on("mouseup", function(e){
+        mouseDown = false;
+        makeTouchEvent(e, "touchend");
+    });
+};
 
 //define colors for color picker
 var colorArr = [

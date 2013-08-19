@@ -34,7 +34,7 @@ SketchTool.play = function(pjs) {
 		}
 	};
 
-	pjs.touchStart = function(event){
+	var touchStart = function(event){
 		event.preventDefault(); 
 		var touch = new pjs.PVector();
 		var offset = $sketch.offset();
@@ -45,16 +45,16 @@ SketchTool.play = function(pjs) {
 		}
 		touch.div(event.targetTouches.length);
 
-	   	var stroke = new pjs.Stroke(
-	  		[new pjs.PVector(touch.x, touch.y)],
-	    	currColor,
-	    	currRadius);
-	    strokes.push(stroke);
-	    pjs.loop();
+		var stroke = new pjs.Stroke(
+			[new pjs.PVector(touch.x, touch.y)],
+			currColor,
+			currRadius);
+		strokes.push(stroke);
+		pjs.loop();
 	};
 
-	pjs.touchMove = function(event){
-		event.preventDefault(); 
+	var touchMove = function(event){
+		event.preventDefault();
 		pjs.loop();
 		var touch = new pjs.PVector();
 		var offset = $sketch.offset();
@@ -65,12 +65,12 @@ SketchTool.play = function(pjs) {
 		touch.div(event.targetTouches.length);
 
 		var currStroke = strokes[strokes.length-1];
-  		currStroke.addPoint(new pjs.PVector(touch.x, touch.y));
+		currStroke.addPoint(new pjs.PVector(touch.x, touch.y));
 	};
 
-	pjs.touchEnd = function(event){
-		event.preventDefault(); 
-  		pjs.noLoop();
+	var touchEnd = function(event){
+		event.preventDefault();
+		pjs.noLoop();
 	};
 
 	pjs.changeColor = function(r,g,b){
@@ -124,20 +124,24 @@ SketchTool.play = function(pjs) {
 		this.render = function(){
 
 			pjs.beginShape();
-  			pjs.stroke(this.color);
-  			pjs.strokeWeight(this.radius);
-  			pjs.noFill();
-  			for(var i=0; i<this.points.length; i++){
-  				var curr = this.points[i];
-    			pjs.curveVertex(curr.x, curr.y);
-  			}
-  			pjs.endShape();
+			pjs.stroke(this.color);
+			pjs.strokeWeight(this.radius);
+			pjs.noFill();
+			for(var i=0; i<this.points.length; i++){
+				var curr = this.points[i];
+				pjs.curveVertex(curr.x, curr.y);
+			}
+			pjs.endShape();
 		};
 
 		this.addPoint = function(point){
 			this.points.push(point);
 		};
 	};
+
+	$sketch.on("touchstart", touchStart);
+	$sketch.on("touchmove", touchMove);
+	$sketch.on("touchend", touchEnd);
 
 };
 
@@ -172,7 +176,6 @@ SketchTool.color = function(sketch,r,g,b){
 		
 		var currObj = this;
 		this.domEl.on("touchend", function(ev){
-			//ev.gesture.preventDefault();
 			currObj.domEl.css({
 				'border-width': '10px'
 			});
@@ -209,7 +212,7 @@ SketchTool.setOptions = function(userOptions){
 /* Call this function on sketch (sketch.getPNG) */
 SketchTool.getPNG = function(){
 	return this.canvas.toDataURL("image/png");
-}
+};
 
 SketchTool.create = function(options){
 	var canvasId = "sketchcanvas";
@@ -232,31 +235,30 @@ SketchTool.create = function(options){
 
 	SketchTool.createColors(jQuery('#color-holder'), sketch, colorArr);
 
-	document.getElementById('cmd_incsize').on("touchend", function(ev){
-        sketch.incRadius(5);
-    });
+	jQuery('#cmd_incsize').on("touchend", function(ev){
+		sketch.incRadius(5);
+	});
 
-    document.getElementById('cmd_decsize').on("touchend", function(ev){
-        sketch.incRadius(-5);
-    });
+  jQuery('#cmd_decsize').on("touchend", function(ev){
+		sketch.incRadius(-5);
+	});
 
-    document.getElementById('cmd_undo').on("touchend", function(ev){
-        sketch.undoStroke();
-    });
+  jQuery('#cmd_undo').on("touchend", function(ev){
+		sketch.undoStroke();
+	});
 
     //runs after sketch is finished
-    document.getElementById('cmd_finish_sketch').on("touchend", function(ev){
+  jQuery('#cmd_finish_sketch').on("touchend", function(ev){
 		if(SketchTool.options.onComplete){
 			SketchTool.options.onComplete(sketch);
 		}
-		jQuery('#sketch-holder').css({'top': Math.floor(pjs.height) + 1 + 'px'});
+	jQuery('#sketch-holder').css({'top': Math.floor(pjs.height) + 1 + 'px'});
 
-		setTimeout(function(){
-			jQuery('#sketch-holder').remove();
-		}, 200);
+	setTimeout(function(){
+		jQuery('#sketch-holder').remove();
+	}, 200);
 
-
-    });
+});
 
 	return sketch;
 };

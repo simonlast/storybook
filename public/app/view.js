@@ -3,22 +3,7 @@ var play = function(pjs) {
 
 	//style
 	var bkg = pjs.color(250);
-
-	//story structure
-	/*
-		[
-			page: { 
-				tabs: [
-					tab: {
-						buttons: [...],
-						sprites: [...]
-					},
-					...
-				]	
-			},
-			...
-		]
-	*/
+	$canvas = jQuery(canvas);
 
 	var tabs = [];
 	currTabIndex = 0;
@@ -30,7 +15,6 @@ var play = function(pjs) {
 	var buttons = [];
 	var anchors = [];
 	var sprites = [];
-	var startButton;
 	var mouse;
 	var narrator;
 
@@ -39,7 +23,7 @@ var play = function(pjs) {
 	//events
 	var timers = [];
 	var taps = [];
-	var shakes = [];	
+	var shakes = [];
 
 	//modes
 	pjs.viewMode = false;
@@ -56,10 +40,9 @@ var play = function(pjs) {
 	var buttonClasses;
 
 	//spring physics for shake button
-	var K = -.1;
-	var friction = .9;
-	var addV = .2;
-
+	var K = -0.1;
+	var friction = 0.9;
+	var addV = 0.2;
 
 	//toolbox
 	var toolboxDimen, toolboxCenter, toolboxCenterTween;
@@ -76,7 +59,10 @@ var play = function(pjs) {
 		toolboxCenter = new pjs.PVector(pjs.width/2, pjs.height - toolboxDimen.y/2 + 10);
 		toolboxCenterTween = new pjs.PVector(toolboxCenter.x,toolboxCenter.y);
 		
-		buttonClasses = [Anchor, Move, Rotate, Say, Timer, Touch, Shake];
+		if('ontouchstart' in window)
+			buttonClasses = [Anchor, Move, Rotate, Say, Timer, Touch, Shake];
+		else
+			buttonClasses = [Anchor, Move, Rotate, Say, Timer, Touch];
 		calculateToolbox();
 	};
 
@@ -107,7 +93,7 @@ var play = function(pjs) {
 		images['Touch'] = pjs.loadImage(base + 'touch.png');
 		images['Shake'] = pjs.loadImage(base + 'shake.png');
 		images['Rotate'] = pjs.loadImage(base + 'rotate.png');
-	}
+	};
 
 	pjs.setup = function(){
 		
@@ -127,10 +113,8 @@ var play = function(pjs) {
 		tabs.push({
 			buttons: buttons,
 			sprites: sprites
-		})
-
-		startButton = new Start(0, pjs.height/2, buttonRad);
-		buttons.push(startButton);
+		});
+		
 	};
 
 	pjs.draw = function(){
@@ -143,23 +127,22 @@ var play = function(pjs) {
 		narrator.render();
 
 		if(!pjs.viewMode){
-			for(var i=0; i<buttons.length; i++){
+			for(i=0; i<buttons.length; i++){
 				buttons[i].drawLinks();
 			}
 
-			for(var i=0; i<buttons.length; i++){
+			for(i=0; i<buttons.length; i++){
 				buttons[i].render();
 			}
 
 			drawToolbox();
-			drawTabMenu();	
+			//drawTabMenu();	
 		}
 
 	};
 
-	//this is a Hammer.js touch event
-	pjs.touchStart = function(event){
-		event.preventDefault(); 
+	var touchStart = function(event){
+		event.preventDefault();
 		var touch = new pjs.PVector();
 
 		//calculate average
@@ -197,7 +180,7 @@ var play = function(pjs) {
 		if(nearest && nearest.dist <= nearest.el.connectCircleDist + nearest.el.connectCircleRad){
 			currButton = nearest.el;
 			clearAllTimeouts();
-			
+
 			//button connection hit
 			if(nearest.dist > nearest.el.rad){
 				var nearestConn = currButton.getNearestConnectionTip();
@@ -213,9 +196,9 @@ var play = function(pjs) {
 		
 	};
 
-	//this is a Hammer.js touch event
-	pjs.touchMove = function(event){
-		event.preventDefault(); 
+
+	var touchMove = function(event){
+		event.preventDefault();
 		var touches = event.targetTouches;
 
 		if(touches.length == 1 && !pinch){
@@ -255,9 +238,9 @@ var play = function(pjs) {
 		
 	};
 
-	//this is a Hammer.js touch event
-	pjs.touchEnd = function(event){
-		event.preventDefault(); 
+
+	var touchEnd = function(event){
+		event.preventDefault();
 		var touch = new pjs.PVector();
 
 		//calculate average
@@ -269,7 +252,7 @@ var play = function(pjs) {
 
 		mouse.x = touch.x;
 		mouse.y = touch.y;
-		
+
 		//toolbox drag
 		if(draggingToolbox){
 			if(toolboxCenter.y >= pjs.height){
@@ -281,6 +264,7 @@ var play = function(pjs) {
 			draggingToolbox = false;
 		}
 		else if(currButton){
+			// debugger;
 			var wasNew = currButton.isNew;
 			currButton.isNew = false;
 			if(!pinch){
@@ -301,6 +285,7 @@ var play = function(pjs) {
 							nearest.el.connect(currButton);
 						}
 					}
+					// currButton = null
 				}
 
 				//set narration on touch release
@@ -398,10 +383,9 @@ var play = function(pjs) {
 	*/
 	var evalAll = function(){
 		clearAllTimeouts();
-		startButton.eval();
-		/*for(var i=0; i<anchors.length; i++){
+		for(var i=0; i<anchors.length; i++){
 			anchors[i].eval();
-		}*/
+		}
 	};
 
 	/*
@@ -432,9 +416,9 @@ var play = function(pjs) {
 			evalAll();
 			currButton = null;
 			connectButton = null;
-			$help.innerHTML = '<i class="icon-stop"></i>';
+			$help.html('<i class="icon-stop"></i>');
 		}else{
-			$help.innerHTML = '<i class="icon-play"></i>';	
+			$help.html('<i class="icon-play"></i>');
 		}
 	};
 
@@ -449,7 +433,7 @@ var play = function(pjs) {
 			shakes.splice(0,1);
 			first.button.doneEval(first.sprite, true);
 		}
-	}
+	};
 
 	/*
 		fires a valid tap event waiting in taps queue
@@ -642,7 +626,7 @@ var play = function(pjs) {
 			//protruding "nib" used to make a new connection
 			this.connectCircleDist = this.rad + 5;
 			this.connectCircle = new pjs.PVector(0, this.connectCircleDist);
-			this.connectCircleRad = this.rad*4/5;
+			this.connectCircleRad = this.rad*3/4;
 
 			this.snapConnectDist = this.rad*4;
 			this.isNew = true; //button has not been dropped yet
@@ -1344,6 +1328,10 @@ var play = function(pjs) {
 		}
 
 	});
+
+	$canvas.on("touchstart", touchStart);
+	$canvas.on("touchmove", touchMove);
+	$canvas.on("touchend", touchEnd);
 
 };
 

@@ -1,8 +1,6 @@
  var express = require('express'),
- 	http = require('http'),
- 	connect = require('connect');
- 	//sio = require('socket.io'),
- 	//sockets = require('./sockets');
+  http = require('http'),
+  connect = require('connect');
 
 var saticServer = connect()
   .use(connect.static('public'))
@@ -19,8 +17,4 @@ app.configure( function(){
 
 var server = http.createServer(app);
 
-//var io = sio.listen(server,  { log: false });
-
-server.listen(80);
-
-//sockets.init(io);
+server.listen(process.argv[2] || 80);
