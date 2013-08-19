@@ -253,6 +253,8 @@ SketchTool.create = function(options){
 
 		if(dist < 10){
 			dist = 2;
+		}else if(dist > width/2 - 5){
+			dist = width/2 - 5;
 		}
 
 		$range.css({

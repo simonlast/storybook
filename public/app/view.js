@@ -688,10 +688,9 @@ var play = function(pjs) {
 				}else{
 					pjs.fill(this.color, 200);
 					pjs.ellipse(this.pos.x+this.connectCircle.x, this.pos.y+this.connectCircle.y,
-				 		this.connectCircleRad*2, this.connectCircleRad*2);	
-				}			
+						this.connectCircleRad*2, this.connectCircleRad*2);
+				}
 			}
-
 			pjs.fill(100,60);
 			pjs.ellipse(this.pos.x, this.pos.y, (this.spring + 5)*2, (this.spring + 5)*2);
 
@@ -719,7 +718,7 @@ var play = function(pjs) {
 			}
 
 			return {el: nearest,
-				dist: dist};
+				dist: nearestDist};
 		},
 
 		drawPossibleConnectionToThis: function(){
