@@ -17,15 +17,18 @@
     </button>
 
     <script id="sketch-template" type="text/x-handlebars">
-      <div class="animated fadeInUpBig" id="sketch-holder">
-        <div id="message"></div><br />
-        <div class="button" id="cmd_finish_sketch"><i class="icon-ok-sign"></i></div>
-        <div class="button paint_control" id="cmd_undo"><i class="icon-undo"></i></div>
-        <div class="button paint_control" id="cmd_decsize"><i class="icon-minus-sign"></i></div>
-        <div class="button paint_control" id="cmd_incsize"><i class="icon-plus-sign"></i></div>
-        <br /><br />
-        <div id="color-holder"></div>
-        <canvas id="sketchcanvas"></canvas>
+        <div class="animated fadeInUpBig" id="sketch-holder">
+            <canvas id="sketchcanvas"></canvas>
+            <div class="controls-container">
+                <div class="controls">
+                    <div class="button" id="cmd_finish_sketch"><i class="icon-ok-sign"></i></div>
+                    <div class="button paint_control" id="cmd_undo"><i class="icon-undo"></i></div>
+                    <div id="range-outer">
+                        <div id="range-inner"></div>
+                    </div>
+                </div>
+            </div>
+        <div id="color-holder"></div> 
       </div>
     </script>
 

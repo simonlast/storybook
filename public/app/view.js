@@ -47,7 +47,6 @@ var play = function(pjs) {
 	//toolbox
 	var toolboxDimen, toolboxCenter, toolboxCenterTween;
 	var toolboxButtons;
-	
 
 	/*
 		This function is called on screen resize events. It will
@@ -74,10 +73,11 @@ var play = function(pjs) {
 
 		toolboxButtons = [];
 		var toolboxStartX = toolboxCenter.x - toolboxDimen.x/2;
-		var divX = toolboxDimen.x/buttonClasses.length;
+		var outerPadding = 20
+		var divX = (toolboxDimen.x-outerPadding*2)/buttonClasses.length;
 
 		for(var i=0; i<buttonClasses.length; i++){
-			var newButton = new buttonClasses[i](toolboxStartX + divX*i + divX/2,
+			var newButton = new buttonClasses[i](toolboxStartX + divX*i + divX/2 + outerPadding,
 				toolboxCenterTween.y -3, 50, buttonRad);
 			toolboxButtons.push(newButton);
 		}
@@ -310,9 +310,9 @@ var play = function(pjs) {
 		pjs.fill(200,100);
 
 		//tween
-		toolboxCenterTween.y += (toolboxCenter.y-toolboxCenterTween.y)*.2;
+		toolboxCenterTween.y += (toolboxCenter.y-toolboxCenterTween.y)*0.2;
 		
-		if(Math.abs(toolboxCenter.y - toolboxCenterTween.y) > .1){
+		if(Math.abs(toolboxCenter.y - toolboxCenterTween.y) > 0.1){
 			calculateToolbox();
 		}
 		pjs.rect(toolboxCenter.x, toolboxCenterTween.y+50, toolboxDimen.x, toolboxDimen.y+100, 10);

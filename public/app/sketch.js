@@ -148,7 +148,7 @@ SketchTool.play = function(pjs) {
 SketchTool.defaults = {
 	width: 800,
 	height: 600,
-	radius: 20,
+	radius: 15,
 	color: {
 		r: 60,
 		g: 60,
@@ -164,11 +164,11 @@ SketchTool.color = function(sketch,r,g,b){
 	this.b = b;
 	this.sketch = sketch;
 	this.className = '' + r + g + b;
-	this.domEl;
+	this.domEl = null;
 
 	//parent is jquery selector
 	this.createDOM = function(parent){
-		parent.append('<div class="color_option ' + this.className + '"></div>');
+		el = parent.append('<div class="color_option ' + this.className + '"></div>');
 		this.domEl = jQuery('.' + this.className);
 		this.domEl.css({
 			'background-color': 'rgb(' + r + ',' + g + ',' + b + ')'
@@ -180,9 +180,10 @@ SketchTool.color = function(sketch,r,g,b){
 				'border-width': '10px'
 			});
 			currObj.sketch.changeColor(currObj.r, currObj.g, currObj.b);
+			jQuery(".color_option").removeClass("active");
+			currObj.domEl.addClass("active");
 		});
-	}
-
+	};
 };
 
 SketchTool.createColors = function(parent, sketch, colors){
@@ -200,7 +201,7 @@ SketchTool.setOptions = function(userOptions){
 		SketchTool.options = SketchTool.defaults;
 	}else{
 		for(var key in SketchTool.defaults){
-			if(userOptions[key] != undefined){
+			if(userOptions[key] !== undefined){
 				SketchTool.options[key] = userOptions[key];
 			}else{
 				SketchTool.options[key] = SketchTool.defaults[key];
@@ -235,16 +236,42 @@ SketchTool.create = function(options){
 
 	SketchTool.createColors(jQuery('#color-holder'), sketch, colorArr);
 
-	jQuery('#cmd_incsize').on("touchend", function(ev){
-		sketch.incRadius(5);
-	});
-
-  jQuery('#cmd_decsize').on("touchend", function(ev){
-		sketch.incRadius(-5);
-	});
-
   jQuery('#cmd_undo').on("touchend", function(ev){
 		sketch.undoStroke();
+	});
+
+	var $outerRange = jQuery("#range-outer");
+	var $range = jQuery("#range-inner");
+
+	var updateRadius = function(ev){
+		var touch = ev.targetTouches[0];
+		var offset = $outerRange.offset();
+		var width = $outerRange.width();
+		var center = new pjs.PVector(offset.left + width/2, offset.top + width/2);
+		var touchVec = new pjs.PVector(touch.pageX, touch.pageY);
+		var dist = pjs.PVector.dist(center, touchVec);
+
+		if(dist < 10){
+			dist = 2;
+		}
+
+		$range.css({
+			width: (dist*2) + "px",
+			height: (dist*2) + "px",
+			"border-radius": (dist) + "px",
+			left: (width/2 - dist) + "px",
+			top: (width/2 - dist) + "px"
+		});
+
+		sketch.changeRadius(dist);
+	};
+
+	$outerRange.on("touchmove", function(ev){
+		updateRadius(ev);
+	});
+
+	$outerRange.on("touchstart", function(ev){
+		updateRadius(ev);
 	});
 
     //runs after sketch is finished
