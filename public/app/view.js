@@ -54,9 +54,9 @@ var play = function(pjs) {
 	*/
 	pjs.setupScreen = function(){
 		pjs.size(pjs.screenWidth, pjs.screenHeight);
-		toolboxDimen = new pjs.PVector(pjs.width - 50, buttonRad*2.7 + 10);
+		toolboxDimen = new pjs.PVector(pjs.width - 50, buttonRad*2.7 + 20);
 		toolboxCenter = new pjs.PVector(pjs.width/2, pjs.height - toolboxDimen.y/2 + 10);
-		toolboxCenterTween = new pjs.PVector(toolboxCenter.x,toolboxCenter.y);
+		toolboxCenterTween = new pjs.PVector(toolboxCenter.x, toolboxCenter.y);
 		
 		if('ontouchstart' in window)
 			buttonClasses = [Anchor, Move, Rotate, Say, Timer, Touch, Shake];
@@ -73,7 +73,7 @@ var play = function(pjs) {
 
 		toolboxButtons = [];
 		var toolboxStartX = toolboxCenter.x - toolboxDimen.x/2;
-		var outerPadding = 20
+		var outerPadding = 20;
 		var divX = (toolboxDimen.x-outerPadding*2)/buttonClasses.length;
 
 		for(var i=0; i<buttonClasses.length; i++){
@@ -910,7 +910,7 @@ var play = function(pjs) {
 
 	var Anchor = Class.create(Button, {
 		initialize: function($super, x, y, rad, sprite){
-			this.sprite = new Sprite(x, y + this.rad/2 + spritePadding, buttonRad, this);
+			this.sprite = new Sprite("default_name", pjs.width/2, pjs.height+ 150, buttonRad, this);
 			$super(x, y, rad, pjs.color(168,202,186));
 		},
 
@@ -1311,7 +1311,7 @@ var play = function(pjs) {
 		},
 
 		deepClone: function(){
-			var clone = new Shake(this.pos.x, this.pos.y, this.rad, this.color);
+			var clone = new Shake(this.pos.x, this.pos.y, buttonRad, this.color);
 			return clone;
 		},
 
