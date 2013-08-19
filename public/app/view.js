@@ -416,9 +416,9 @@ var play = function(pjs) {
 			evalAll();
 			currButton = null;
 			connectButton = null;
-			$help.html('<i class="icon-stop"></i>');
+			$play.html('<i class="icon-stop"></i>');
 		}else{
-			$help.html('<i class="icon-play"></i>');
+			$play.html('<i class="icon-play"></i>');
 		}
 	};
 
@@ -582,12 +582,16 @@ var play = function(pjs) {
 		},
 
 		createImage: function(){
+			if(jQuery('.popup').length > 0){
+				return;
+			}
 			var obj = this;
+			pjs.noLoop();
 			SketchTool.create({width: 600, height: 600, onComplete: function(sketch){
 				obj.image = pjs.loadImage(sketch.getPNG());
 				pjs.loop();
 			}});
-			pjs.noLoop();
+			
 		},
 
 		render: function(){

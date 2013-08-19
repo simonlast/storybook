@@ -121,14 +121,17 @@ i {
 a {
   text-decoration: none;
 }
-.helpToggle {
+.menu {
   position: absolute;
   top: 0px;
   right: 0;
+}
+.menu-button {
   background-color: #d4d4d4;
   color: #646464;
   padding: 15px;
   margin: 5px;
+  width: 80px;
   border-radius: 8px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -139,10 +142,25 @@ a {
   cursor: pointer;
   opacity: .7;
 }
-.helpToggle i {
+.menu-button i {
   font-size: 60px;
 }
-.helpToggle:active {
+.close-button {
+  border: none;
+  margin-top: -20px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: .7;
+}
+.close-button span {
+  margin: 0;
+  padding: 0;
+  color: black;
+  font-size: 80px;
+}
+.menu-button:active,
+.close-button:active {
   opacity: .9;
 }
 #cmd_finish_sketch i {
@@ -181,7 +199,7 @@ a {
 #narrate:hover {
   background: #fafafa;
 }
-#sketch-holder {
+.popup {
   position: absolute;
   margin: 0;
   top: 0;
@@ -207,7 +225,7 @@ a {
   width: 200px;
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   height: 100%;
   background-color: rgba(240, 240, 240, 0.7);
   text-align: center;
@@ -219,7 +237,7 @@ a {
 #color-holder {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   padding: 10px;
   width: 180px;
   height: 100%;
@@ -268,4 +286,47 @@ a {
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   background-color: #646464;
+}
+#videos {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#videos video {
+  position: absolute;
+  width: 70%;
+  top: 50px;
+  left: 50%;
+  margin-left: -35%;
+  background-color: rgba(240, 240, 240, 0.7);
+  padding: 20px;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+}
+#button-icons {
+  position: absolute;
+  width: 1000px;
+  bottom: 0;
+  left: 50%;
+  margin-left: -500px;
+  text-align: center;
+  padding: 5px;
+  background-color: rgba(240, 240, 240, 0.7);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.button-icon {
+  margin: 15px;
+  width: 100px;
+  height: 100px;
+  -webkit-backface-visibility: hidden;
+  /* Prevents flickering */
+
+  -webkit-transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  -ms-transition: all 0.15s ease-in-out;
 }

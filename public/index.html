@@ -12,15 +12,21 @@
   <body>
     <canvas id="pcanvas"></canvas>
 
-    <button id="help" class="helpToggle">
-      <i class="icon-play"></i>
-    </button>
+    <div class="menu">
+        <button id="help-toggle" class="menu-button">
+          <i class="icon-lightbulb"></i>
+        </button>
+        <button id="play-toggle" class="menu-button">
+          <i class="icon-play"></i>
+        </button>
+    </div>
+    
 
     <script id="sketch-template" type="text/x-handlebars">
-        <div class="animated fadeInUpBig" id="sketch-holder">
+        <div class="popup animated fadeInUpBig" id="sketch-holder">
             <canvas id="sketchcanvas"></canvas>
-            <div class="controls-container">
-                <div class="animated fadeInLeftBig controls">
+            <div class="controls-container animated fadeInRightBig">
+                <div class="animated  controls">
                     <div class="button" id="cmd_finish_sketch"><i class="icon-ok-sign"></i></div>
                     <div class="button paint_control" id="cmd_undo"><i class="icon-undo"></i></div>
                     <div id="range-outer">
@@ -28,8 +34,35 @@
                     </div>
                 </div>
             </div>
-        <div class="animated fadeInRightBig" id="color-holder"></div> 
-      </div>
+            <div class="animated fadeInLeftBig" id="color-holder"></div> 
+        </div>
+    </script>
+
+    <script id="help-template" type="text/x-handlebars">
+        <div class="popup animated fadeInUpBig" id="help">      
+            <div id="videos">
+                <video autoplay loop muted>
+                  <source src="/assets/videos/logicbot.webm" type="video/webm">
+                </video>
+            </div>
+
+            <div id="button-icons">
+                <img class="active button-icon" src="/images/anchor.png">
+                <img class="button-icon" src="/images/move.png">
+                <img class="button-icon" src="/images/rotate.png">
+                <img class="button-icon" src="/images/timer.png">
+                <img class="button-icon" src="/images/say.png">
+                <img class="button-icon" src="/images/touch.png">
+                <img class="button-icon" src="/images/shake.png">
+            </div>
+
+
+            <div class="menu">
+                <button id="help-close" class="close-button">
+                  <span>×</span>
+                </button>
+            </div>
+        </div>
     </script>
 
     <script id="dialog-template" type="text/x-handlebars">
@@ -45,6 +78,7 @@
     <script type="text/javascript" src="/app/orientation.js"></script>
     <script type="text/javascript" src="/app/sketch.js"></script>
     <script type="text/javascript" src="/app/dialog.js"></script>
+    <script type="text/javascript" src="/app/help.js"></script>
     <script type="text/javascript" src="/app/config.js"></script>
   </body>
 </html>

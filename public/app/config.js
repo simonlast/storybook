@@ -1,6 +1,9 @@
 
-$help = jQuery("#help");
-$help.on("touchend", pjs.toggleViewMode);
+$play = jQuery("#play-toggle");
+$play.on("touchend", pjs.toggleViewMode);
+
+$help = jQuery("#help-toggle");
+$help.on("touchend", HelpMenu.create);
 
 window.onload = function(){
     if(!('ontouchstart' in window)){
