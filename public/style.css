@@ -125,7 +125,7 @@ a {
   position: absolute;
   top: 0px;
   right: 0;
-  background-color: #e1e1e1;
+  background-color: #d4d4d4;
   color: #646464;
   padding: 15px;
   margin: 5px;
@@ -137,9 +137,13 @@ a {
   -webkit-user-select: none;
   border: none;
   cursor: pointer;
+  opacity: .7;
 }
 .helpToggle i {
   font-size: 60px;
+}
+.helpToggle:active {
+  opacity: .9;
 }
 #cmd_finish_sketch i {
   color: #57ac80;

@@ -163,7 +163,7 @@ a{
     position: absolute;
     top:0px;
     right: 0;
-    background-color: darken(@bkg,10%);
+    background-color: darken(@bkg, 15%);
     color: rgb(100,100,100);
     padding: 15px;
     margin: 5px;
@@ -172,10 +172,16 @@ a{
     .noselect;
     border: none;
     cursor: pointer;
+    opacity: .7;
     
     i{
         font-size: 60px;
     }
+}
+
+.helpToggle:active{
+    opacity: .9;
+
 }
 
 #cmd_finish_sketch i{
