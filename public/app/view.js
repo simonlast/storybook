@@ -143,6 +143,9 @@ var play = function(pjs) {
 
 	var touchStart = function(event){
 		event.preventDefault();
+		if(event.originalEvent){
+			event = event.originalEvent;
+		}
 		var touch = new pjs.PVector();
 
 		//calculate average
@@ -199,6 +202,9 @@ var play = function(pjs) {
 
 	var touchMove = function(event){
 		event.preventDefault();
+		if(event.originalEvent){
+			event = event.originalEvent;
+		}
 		var touches = event.targetTouches;
 
 		if(touches.length == 1 && !pinch){
@@ -241,6 +247,9 @@ var play = function(pjs) {
 
 	var touchEnd = function(event){
 		event.preventDefault();
+		if(event.originalEvent){
+			event = event.originalEvent;
+		}
 		var touch = new pjs.PVector();
 
 		//calculate average

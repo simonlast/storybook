@@ -36,6 +36,9 @@ SketchTool.play = function(pjs) {
 
 	var touchStart = function(event){
 		event.preventDefault(); 
+		if(event.originalEvent){
+			event = event.originalEvent;
+		}
 		var touch = new pjs.PVector();
 		var offset = $sketch.offset();
 
@@ -55,6 +58,9 @@ SketchTool.play = function(pjs) {
 
 	var touchMove = function(event){
 		event.preventDefault();
+		if(event.originalEvent){
+			event = event.originalEvent;
+		}
 		pjs.loop();
 		var touch = new pjs.PVector();
 		var offset = $sketch.offset();
@@ -70,6 +76,9 @@ SketchTool.play = function(pjs) {
 
 	var touchEnd = function(event){
 		event.preventDefault();
+		if(event.originalEvent){
+			event = event.originalEvent;
+		}
 		pjs.noLoop();
 	};
 
@@ -244,6 +253,9 @@ SketchTool.create = function(options){
 	var $range = jQuery("#range-inner");
 
 	var updateRadius = function(ev){
+		if(ev.originalEvent){
+			ev = ev.originalEvent;
+		}
 		var touch = ev.targetTouches[0];
 		var offset = $outerRange.offset();
 		var width = $outerRange.width();
