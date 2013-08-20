@@ -25,12 +25,12 @@ var makeTouchEvent = function(e, type){
     touchEvent.targetTouches = touches;
     touchEvent.changedTouches = touches;
 
-    $target = jQuery(e.target);
+    var $target = jQuery(e.target);
     $target.trigger(touchEvent);
 };
 
 var polyfillEvents = function(){
-    $doc = jQuery(document);
+    var $doc = jQuery(document);
     var mouseDown = false;
 
     $doc.on("mousedown", function(e){
@@ -115,12 +115,6 @@ var colorArr = [
         {r: 2,g: 170,b: 176},
         {r: 0,g: 205,b: 172},
         {r: 127,g: 255,b: 36},
-        {r: 195,g: 255,b: 104}/*,
-
-        {r: 204,g: 12,b: 57},
-        {r: 230,g: 120,b: 30},
-        {r: 200,g: 207,b: 2},
-        {r: 248,g: 252,b: 193},
-        {r: 22,g: 147,b: 167},*/
+        {r: 195,g: 255,b: 104}
     ];
 
