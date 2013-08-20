@@ -1,4 +1,3 @@
-
 var play = function(pjs) {
 
 	//style
@@ -1344,7 +1343,6 @@ var play = function(pjs) {
 	$canvas.on("touchstart", touchStart);
 	$canvas.on("touchmove", touchMove);
 	$canvas.on("touchend", touchEnd);
-
 };
 
 var canvas = document.getElementById("pcanvas");
@@ -1353,5 +1351,4 @@ var pjs = new Processing(canvas, play);
 //set up resize event
 window.onresize = function(event) {
    pjs.setupScreen();
-}
-
+};
