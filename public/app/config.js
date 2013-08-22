@@ -11,7 +11,12 @@ window.onload = function(){
     }
 };
 
-var makeTouchEvent = function(e, type){
+var makeTouchEvent = function(e, type, target){
+
+    if(!target){
+        target = e.target;
+    }
+
 
     var touchEvent = jQuery.Event(type);
 
@@ -25,27 +30,30 @@ var makeTouchEvent = function(e, type){
     touchEvent.targetTouches = touches;
     touchEvent.changedTouches = touches;
 
-    var $target = jQuery(e.target);
+    var $target = jQuery(target);
     $target.trigger(touchEvent);
 };
 
 var polyfillEvents = function(){
     var $doc = jQuery(document);
     var mouseDown = false;
+    var target = null;
 
     $doc.on("mousedown", function(e){
         mouseDown = true;
-        makeTouchEvent(e, "touchstart");
+        target = e.target;
+        makeTouchEvent(e, "touchstart", target);
     });
 
     $doc.on("mousemove", function(e){
         if(mouseDown)
-            makeTouchEvent(e, "touchmove");
+            makeTouchEvent(e, "touchmove", target);
     });
 
     $doc.on("mouseup", function(e){
+        makeTouchEvent(e, "touchend", target);
         mouseDown = false;
-        makeTouchEvent(e, "touchend");
+        target = null;
     });
 };
 
