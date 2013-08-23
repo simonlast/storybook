@@ -304,7 +304,7 @@ a {
   left: 50%;
   margin-left: -35%;
   background-color: rgba(245, 245, 245, 0.7);
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -332,4 +332,7 @@ a {
   -moz-transition: all 0.15s ease-in-out;
   -o-transition: all 0.15s ease-in-out;
   -ms-transition: all 0.15s ease-in-out;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
 }
