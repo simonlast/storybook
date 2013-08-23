@@ -12,13 +12,18 @@ HelpMenu.setupEvents = function($el){
     $buttons.children().removeClass("active");
     $target.addClass("active");
 
-    $videos.children().css({
+    var $children = $videos.children();
+    $children.css({
       display: "none"
+    });
+    $children.each(function(i){
+      $children[i].pause();
     });
 
     $show = $videos.children("#" + $target.attr("id"));
 
     $show[0].currentTime = 0;
+    $show[0].play();
 
     $show.css({
       display: "block"
@@ -37,6 +42,14 @@ HelpMenu.setupEvents = function($el){
 HelpMenu.create = function(){
   jQuery("body").append(HelpMenu.template);
   var $el = jQuery("#help");
+
+  var $videos = $el.find("#videos").children();
+  $videos.each(function(i){
+    if(i > 0){
+      var video = $videos[i];
+      video.pause();
+    }
+  });
 
   HelpMenu.setupEvents($el);
 };
