@@ -132,6 +132,7 @@ a {
   padding: 15px;
   margin: 5px;
   width: 80px;
+  outline: none;
   border-radius: 8px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -151,6 +152,7 @@ a {
   margin-right: 10px;
   padding: 0;
   background: transparent;
+  outline: none;
   cursor: pointer;
   opacity: .7;
 }

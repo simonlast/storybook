@@ -1,4 +1,3 @@
-
 $play = jQuery("#play-toggle");
 $play.on("touchend", pjs.toggleViewMode);
 
@@ -12,11 +11,9 @@ window.onload = function(){
 };
 
 var makeTouchEvent = function(e, type, target){
-
     if(!target){
         target = e.target;
     }
-
 
     var touchEvent = jQuery.Event(type);
 
@@ -125,4 +122,3 @@ var colorArr = [
         {r: 127,g: 255,b: 36},
         {r: 195,g: 255,b: 104}
     ];
-
