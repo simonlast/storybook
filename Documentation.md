@@ -2,13 +2,13 @@
 
 [Try it out here.](http://storybook.simonlast.org)
 
-This document describes the design of the Storybook environment. For visual examples of the functionality of each button, press the lightbulb icon.
+This document describes the design of the Storybook environment. For visual examples of the functionality of each button, press the [lightbulb icon](http://storybook.simonlast.org).
 
 ##Definitions
 
 ###Sprite
 
-A Sprite is a user-generated image, attached to the canvas. Sprites are created using a Sprite button. A sprite will always be associated with the button that created it.
+A Sprite is a user-generated image which is attached to the canvas. Sprites are created using a Sprite button. A sprite will always be associated with the button that created it.
 
 ###Button
 
