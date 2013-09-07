@@ -8,5 +8,5 @@ It is a tool that enables the creation of interactive stories that take advantag
 
 The interface does not rely on traditional text to generate dynamic behavior. Instead, colored buttons which represent different operations are connected visually into a chain, forming a procedure.
 
-##[Try it Out](http://storybook.simonlast.org)
-##[Documentation](https://github.com/simonlast/storybook/blob/master/Documentation.md)
+[Try it Out](http://storybook.simonlast.org)
+[Documentation](https://github.com/simonlast/storybook/blob/master/Documentation.md)
