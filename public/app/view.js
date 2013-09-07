@@ -631,7 +631,7 @@ var play = function(pjs) {
 			this.pos = new pjs.PVector(x, y);
 			this.rad = rad;
 			this.outline = rad + 5;
-			this.popOutline = this.outline + 10;
+			this.popOutline = this.outline + 15;
 			this.color = color;
 			this.linkGray = 150;
 
@@ -860,7 +860,6 @@ var play = function(pjs) {
 
 		showReaction: function(){
 			//expands outline for 'popping' effect
-			//this.tweens.outline = this.popOutline;
 			this.spring = this.popOutline;
 			this.tweens.linkGray = 20;
 		},
