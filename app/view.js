@@ -30,7 +30,7 @@ var play = function(pjs) {
 	var connectButton = null;
 	var draggingToolbox = false;
 	var pinch = false; //currently pinching
-	
+
 	//const
 	var buttonRad = 50;
 	var spritePadding = buttonRad + 15;
@@ -56,7 +56,7 @@ var play = function(pjs) {
 		toolboxDimen = new pjs.PVector(pjs.width - 50, buttonRad*2.7 + 20);
 		toolboxCenter = new pjs.PVector(pjs.width/2, pjs.height - toolboxDimen.y/2 + 10);
 		toolboxCenterTween = new pjs.PVector(toolboxCenter.x, toolboxCenter.y);
-		
+
 		if('ontouchstart' in window)
 			buttonClasses = [Anchor, Move, Rotate, Say, Timer, Touch, Shake];
 		else
@@ -84,7 +84,7 @@ var play = function(pjs) {
 
 	var loadImages = function(){
 		images = {};
-		var base = '/images/';
+		var base = '/assets/buttons/';
 		images['Anchor'] = pjs.loadImage(base + 'anchor.png');
 		images['Move'] = pjs.loadImage(base + 'move.png');
 		images['Timer'] = pjs.loadImage(base + 'timer.png');
@@ -95,7 +95,7 @@ var play = function(pjs) {
 	};
 
 	pjs.setup = function(){
-		
+
 		pjs.setupScreen();
 		loadImages();
 
@@ -113,7 +113,7 @@ var play = function(pjs) {
 			buttons: buttons,
 			sprites: sprites
 		});
-		
+
 	};
 
 	pjs.draw = function(){
@@ -135,7 +135,7 @@ var play = function(pjs) {
 			}
 
 			drawToolbox();
-			//drawTabMenu();	
+			//drawTabMenu();
 		}
 
 	};
@@ -195,7 +195,7 @@ var play = function(pjs) {
 			connectButton = null;
 			fireTap();
 		}
-		
+
 	};
 
 
@@ -218,7 +218,7 @@ var play = function(pjs) {
 
 			mouse.x = touch.x;
 			mouse.y = touch.y;
-			
+
 			//toolbox drag
 			if(draggingToolbox){
 				toolboxCenter.y = mouse.y + toolboxDimen.y/2;
@@ -240,7 +240,7 @@ var play = function(pjs) {
 			}
 		}
 
-		
+
 	};
 
 
@@ -305,13 +305,13 @@ var play = function(pjs) {
 				currButton.springOrig = currButton.rad; //reset spring after pinch gesture
 			}
 
-			
+
 			//re-evaluate entire program
 			evalAll();
 		}
 	};
 
-	/* 
+	/*
 		tweens and draws the toolbox onto the screen
 	*/
 	var drawToolbox = function(){
@@ -319,7 +319,7 @@ var play = function(pjs) {
 
 		//tween
 		toolboxCenterTween.y += (toolboxCenter.y-toolboxCenterTween.y)*0.2;
-		
+
 		if(Math.abs(toolboxCenter.y - toolboxCenterTween.y) > 0.1){
 			calculateToolbox();
 		}
@@ -329,7 +329,7 @@ var play = function(pjs) {
 		}
 	};
 
-	/* 
+	/*
 		activates toolbox functionality, either creating a
 		new button or dragging the toolbox
 	 */
@@ -480,7 +480,7 @@ var play = function(pjs) {
 		var minDist = pjs.PVector.dist(vec, arr[0].pos);
 
 		if(arr.length > 1){
-			for(var i=1; i<arr.length; i++){		
+			for(var i=1; i<arr.length; i++){
 				var currDist = pjs.PVector.dist(vec,arr[i].pos);
 				if(currDist < minDist){
 					minDist = currDist;
@@ -522,7 +522,7 @@ var play = function(pjs) {
 
 		render: function(){
 			this.tween();
-			
+
 			if(this.text){
 				pjs.textSize(this.fontSize);
 				pjs.fill(60,this.tweens.opacity);
@@ -550,7 +550,7 @@ var play = function(pjs) {
 
 	/*
 		This class defines the behavior of a sprite,
-		a static image that can be manipulated by a 
+		a static image that can be manipulated by a
 		program.
 	*/
 	var Sprite = Class.create({
@@ -599,7 +599,7 @@ var play = function(pjs) {
 				obj.image = pjs.loadImage(sketch.getPNG());
 				pjs.loop();
 			}});
-			
+
 		},
 
 		render: function(){
@@ -779,7 +779,7 @@ var play = function(pjs) {
 					minIsConnectedTo = true;
 				}
 			}
-			
+
 			if(minDist < this.connectCircleRad){
 				if(minIsConnectedTo){
 					minEl.disconnect(this);
@@ -802,7 +802,7 @@ var play = function(pjs) {
 				var diff = pjs.PVector.sub(curr.pos, this.pos);
 				diff.normalize();
 				diff.mult(this.connectCircleDist);
-				pjs.ellipse(this.pos.x + diff.x, this.pos.y + diff.y, 
+				pjs.ellipse(this.pos.x + diff.x, this.pos.y + diff.y,
 					this.connectCircleRad*2, this.connectCircleRad*2);
 			}
 			for(var i=0; i<this.connectsToThis.length; i++){
@@ -811,7 +811,7 @@ var play = function(pjs) {
 				diff.normalize();
 				diff.mult(this.connectCircleDist);
 				pjs.fill(curr.color, 200);
-				pjs.ellipse(this.pos.x + diff.x, this.pos.y + diff.y, 
+				pjs.ellipse(this.pos.x + diff.x, this.pos.y + diff.y,
 					this.connectCircleRad*2, this.connectCircleRad*2);
 			}
 		},
@@ -820,7 +820,7 @@ var play = function(pjs) {
 			var diff = pjs.PVector.sub(from, to);
 			diff.normalize();
 			diff.mult(this.connectCircleRad);
-			pjs.triangle(from.x - diff.y, from.y + diff.x, 
+			pjs.triangle(from.x - diff.y, from.y + diff.x,
 				from.x + diff.y, from.y - diff.x,
 				to.x, to.y);
 		},
@@ -845,9 +845,9 @@ var play = function(pjs) {
 			this.drawLink(diff, mouse);
 			pjs.fill(this.color,200);
 			pjs.ellipse(mouse.x, mouse.y,
-				 this.connectCircleRad*2, this.connectCircleRad*2);	
+				 this.connectCircleRad*2, this.connectCircleRad*2);
 			pjs.fill(this.color);
-			pjs.ellipse(diff.x, diff.y, 
+			pjs.ellipse(diff.x, diff.y,
 				this.connectCircleRad*2, this.connectCircleRad*2);
 		},
 
@@ -895,7 +895,7 @@ var play = function(pjs) {
 			this.connected = this.connected.filter(function(el){
 				return el != other;
 			});
-			
+
 			var obj = this;
 			other.connectsToThis = other.connectsToThis.filter(function(el){
 				return el != obj;
@@ -967,7 +967,7 @@ var play = function(pjs) {
 				this.move(this.pos.x, this.pos.y);
 				this.propagate(this.sprite);
 			}
-			
+
 		}
 
 	});
@@ -1001,7 +1001,7 @@ var play = function(pjs) {
 	var Move = Class.create(Button, {
 		initialize: function($super, x, y, rad){
 			$super(x, y, rad, pjs.color(168,202,186));
-			
+
 			//used for animation
 			this.spriteOrig = null;
 			this.sprite = null;
@@ -1083,10 +1083,10 @@ var play = function(pjs) {
 			pjs.popMatrix();
 			if(currButton == this && pinch){
 				if(this.rotateAmount > 0){
-					pjs.arc(this.pos.x, this.pos.y, this.spring*2, this.spring*2, 
+					pjs.arc(this.pos.x, this.pos.y, this.spring*2, this.spring*2,
 						3*Math.PI/2, 3*Math.PI/2+this.rotateAmount);
 				}else{
-					pjs.arc(this.pos.x, this.pos.y, this.spring*2, this.spring*2, 
+					pjs.arc(this.pos.x, this.pos.y, this.spring*2, this.spring*2,
 						3*Math.PI/2+this.rotateAmount, 3*Math.PI/2);
 				}
 
@@ -1132,7 +1132,7 @@ var play = function(pjs) {
 	var Say = Class.create(Button, {
 		initialize: function($super, x, y, rad){
 			$super(x, y, rad, pjs.color(168,219,168));
-			
+
 			//used for animation
 			this.spriteOrig = null;
 			this.sprite = null;

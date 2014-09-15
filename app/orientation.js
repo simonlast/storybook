@@ -1,17 +1,15 @@
 
 var handleMotionEvent = function(event){
- 
+
     event.preventDefault();
 
     var x = event.accelerationIncludingGravity.x;
     var y = event.accelerationIncludingGravity.y;
     var z = event.accelerationIncludingGravity.z;
-   
-    console.log(x + ', ' + y + ', ' + z);
 
     shake.tick(x, y, z);
 }
- 
+
 window.addEventListener("devicemotion", handleMotionEvent, true);
 
 /*
