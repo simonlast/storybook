@@ -84,7 +84,7 @@ var play = function(pjs) {
 
 	var loadImages = function(){
 		images = {};
-		var base = '/assets/buttons/';
+		var base = 'assets/buttons/';
 		images['Anchor'] = pjs.loadImage(base + 'anchor.png');
 		images['Move'] = pjs.loadImage(base + 'move.png');
 		images['Timer'] = pjs.loadImage(base + 'timer.png');
